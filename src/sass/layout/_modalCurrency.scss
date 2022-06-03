@@ -1,0 +1,14 @@
+.currency_list {
+  position: absolute;
+  top: 15px;
+  left: -35px;
+}
+
+.currency_item {
+  width: 48px;
+  padding: 8px 38px 8px 20px;
+  cursor: pointer;
+  &:hover {
+    background: #eeeeee;
+  }
+}
