@@ -33,7 +33,7 @@ export default class Header extends Component {
   }
 
   render() {
-    const { currencyModal, activeCurrency, BagModal } = this.state;
+    const { currencyModal, activeCurrency } = this.state;
     return (
       <header className="container header">
         <nav className="nav">
