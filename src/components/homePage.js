@@ -91,71 +91,75 @@ export default class HomePage extends Component {
     const { productAll, priceHomePage } = this.state;
     const { symbolCard } = this.props;
     return (
-      <main className="container backdrop">
-        <p className="category-name">Category name</p>
-        <ul className="gallery_list">
-          {productAll.length > 0 &&
-            productAll.map(
-              ({ product, id, name, price, brand, inStock }, inx) => {
-                return (
-                  <li
-                    onMouseOver={this.id}
-                    onMouseLeave={this.id}
-                    id={id}
-                    className={
-                      inStock ? "gallery_item" : "gallery_item--disabled"
-                    }
-                    key={id}
-                  >
-                    <img
-                      width="354"
-                      height="330"
-                      src={product}
-                      alt="our products"
-                    />
-                    <p
+      <main className="backdrop">
+        <div className="container">
+          <p className="category-name">Category name</p>
+          <ul className="gallery_list">
+            {productAll.length > 0 &&
+              productAll.map(
+                ({ product, id, name, price, brand, inStock }, inx) => {
+                  return (
+                    <li
+                      onMouseOver={this.id}
+                      onMouseLeave={this.id}
+                      id={id}
                       className={
-                        inStock ? "gallery_brand" : "gallery_brand--disabled"
+                        inStock ? "gallery_item" : "gallery_item--disabled"
                       }
+                      key={id}
                     >
-                      {brand}
-                      {name}
-                    </p>
-                    <p
-                      className={
-                        inStock ? "gallery_price" : "gallery_price--disabled"
-                      }
-                    >
-                      {symbolCard}
-                      {productAll.length > 0 &&
-                        price.map((data) => {
-                          return priceHomePage
-                            .filter((val, ind, arr) => arr.indexOf(val) === ind)
-                            .find((val, ind) => {
-                              if (
-                                inx === ind &&
-                                val === data.amount &&
-                                data.currency.symbol.trim() ===
-                                  symbolCard.trim()
-                              ) {
-                                // console.log(val);
-                                return val;
-                              }
-                              return null;
-                            });
-                        })}
-                    </p>
-                    {id === this.state.id && inStock && (
-                      <button className="btn_add-basket">
-                        <img src={Basket} alt="Add to basket" />
-                      </button>
-                    )}
-                    {!inStock && <p className="gallery_out">OUT OF STOCK</p>}
-                  </li>
-                );
-              }
-            )}
-        </ul>
+                      <img
+                        width="354"
+                        height="330"
+                        src={product}
+                        alt="our products"
+                      />
+                      <p
+                        className={
+                          inStock ? "gallery_brand" : "gallery_brand--disabled"
+                        }
+                      >
+                        {brand}
+                        {name}
+                      </p>
+                      <p
+                        className={
+                          inStock ? "gallery_price" : "gallery_price--disabled"
+                        }
+                      >
+                        {symbolCard}
+                        {productAll.length > 0 &&
+                          price.map((data) => {
+                            return priceHomePage
+                              .filter(
+                                (val, ind, arr) => arr.indexOf(val) === ind
+                              )
+                              .find((val, ind) => {
+                                if (
+                                  inx === ind &&
+                                  val === data.amount &&
+                                  data.currency.symbol.trim() ===
+                                    symbolCard.trim()
+                                ) {
+                                  // console.log(val);
+                                  return val;
+                                }
+                                return null;
+                              });
+                          })}
+                      </p>
+                      {id === this.state.id && inStock && (
+                        <button className="btn_add-basket">
+                          <img src={Basket} alt="Add to basket" />
+                        </button>
+                      )}
+                      {!inStock && <p className="gallery_out">OUT OF STOCK</p>}
+                    </li>
+                  );
+                }
+              )}
+          </ul>
+        </div>
       </main>
     );
   }
