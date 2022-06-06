@@ -42,6 +42,7 @@ export default class Api extends Component {
             product(id: "${id}") {
               name
               brand
+              id
               description
               attributes {
                 id

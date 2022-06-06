@@ -45,7 +45,7 @@ export default class Header extends Component {
                 className={({ isActive }) =>
                   `${isActive ? "active" : "nav_link"}`
                 }
-                to="/"
+                to="/Card-shop"
               >
                 Women
               </NavLink>
@@ -91,7 +91,7 @@ export default class Header extends Component {
 
           <button onClick={this.toggleModalBag} className="btn_basket ">
             <img src={Basket} alt="Basket" />
-            <div className="bag">5</div>
+            <div className="bag">1</div>
           </button>
         </div>
       </header>

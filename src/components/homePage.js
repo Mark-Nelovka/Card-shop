@@ -17,22 +17,28 @@ export default class HomePage extends Component {
 
   async componentDidMount() {
     const activeCur = localStorage.getItem("currencySymbol");
+    const qwe = JSON.parse(localStorage.getItem("qwe"));
+    if (qwe) {
+      this.setState({ bag: qwe });
+    }
     this.setState({ activeS: activeCur });
     const result = await fetchProduct.getAllProduct();
-    const qwe = result.map(({ gallery, id, name, prices, brand, inStock }) => {
-      const obj = {
-        product: gallery[0],
-        id: id,
-        name,
-        brand,
-        price: prices,
-        inStock,
-      };
-      return obj;
-    });
-    this.setState({ productAll: qwe });
+    const products = result.map(
+      ({ gallery, id, name, prices, brand, inStock }) => {
+        const obj = {
+          product: gallery[0],
+          id: id,
+          name,
+          brand,
+          price: prices,
+          inStock,
+        };
+        return obj;
+      }
+    );
+    this.setState({ productAll: products });
 
-    for (let data of qwe) {
+    for (let data of products) {
       data.price.map(({ amount, currency }) => {
         if (currency.symbol.trim() === this.state.activeS.trim()) {
           return this.setState((prevState) => {
@@ -81,10 +87,16 @@ export default class HomePage extends Component {
 
   addBag = async (e) => {
     const { id } = e.currentTarget;
+    const { bag } = this.state;
     const product = await fetchProduct.getProductId(id);
-    this.setState((prevState) => ({
-      bag: [...prevState.bag, ...product],
-    }));
+    const unique = bag.find((val) => val.id === id);
+
+    if (!unique) {
+      this.setState((prevState) => ({
+        bag: [...prevState.bag, ...product],
+      }));
+      return localStorage.setItem("qwe", JSON.stringify([...product, ...bag]));
+    }
   };
 
   render() {
