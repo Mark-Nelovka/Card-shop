@@ -5,13 +5,11 @@ import ArrowUp from "../images/arrow-up.svg";
 import Basket from "../images/Empty-Cart.svg";
 import ArrowDown from "../images/arrow-down.svg";
 import ChoiceCurrency from "./modalCurrency";
-import ModalBag from "./modalBag";
 
 export default class Header extends Component {
   state = {
     currencyModal: false,
     activeCurrency: "",
-    BagModal: false,
   };
   changeCurrency = () => {
     this.setState({ currencyModal: !this.state.currencyModal });
@@ -31,6 +29,10 @@ export default class Header extends Component {
     }
     this.setState({ activeCurrency: "$" });
   }
+
+  toggleModalBag = () => {
+    this.props.modalBag();
+  };
 
   render() {
     const { currencyModal, activeCurrency } = this.state;
@@ -87,10 +89,9 @@ export default class Header extends Component {
             )}
           </button>
 
-          <button className="btn_basket ">
+          <button onClick={this.toggleModalBag} className="btn_basket ">
             <img src={Basket} alt="Basket" />
             <div className="bag">5</div>
-            <ModalBag />
           </button>
         </div>
       </header>

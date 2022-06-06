@@ -1,7 +1,6 @@
 import { Component } from "react";
-import { CURRENCIES } from "./Api";
-import { client } from "../index";
-import Notiflix from "notiflix";
+import Api from "./Api";
+const fetchCur = new Api();
 
 export default class ChoiceCurrency extends Component {
   state = {
@@ -9,14 +8,8 @@ export default class ChoiceCurrency extends Component {
   };
 
   async componentDidMount() {
-    try {
-      const currenciesQ = await client.query({
-        query: CURRENCIES,
-      });
-      this.setState({ currencies: currenciesQ.data.currencies });
-    } catch (error) {
-      Notiflix.Notify.failure(`${error.message}`);
-    }
+    const currencies = await fetchCur.getCurrencies();
+    this.setState({ currencies: currencies });
   }
 
   choise = (e) => {

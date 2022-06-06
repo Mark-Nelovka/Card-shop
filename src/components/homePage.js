@@ -1,9 +1,9 @@
 import { Component } from "react";
 // import { v4 } from "uuid";
-import { PRODUCT } from "./Api";
 import Basket from "../images/Basket_card.svg";
-import { client } from "../index";
-import Notiflix from "notiflix";
+import ModalBag from "./modalBag";
+import Api from "./Api";
+const fetchProduct = new Api();
 
 export default class HomePage extends Component {
   state = {
@@ -12,43 +12,35 @@ export default class HomePage extends Component {
     id: "",
     priceHomePage: [],
     activeS: "",
+    bag: [],
   };
 
   async componentDidMount() {
     const activeCur = localStorage.getItem("currencySymbol");
     this.setState({ activeS: activeCur });
-    try {
-      const result = await client.query({
-        query: PRODUCT,
-      });
-      const qwe = result.data.category.products.map(
-        ({ gallery, id, name, prices, brand, inStock }) => {
-          const obj = {
-            product: gallery[0],
-            id: id,
-            name,
-            brand,
-            price: prices,
-            inStock,
-          };
-          return obj;
-        }
-      );
-      this.setState({ productAll: qwe });
+    const result = await fetchProduct.getAllProduct();
+    const qwe = result.map(({ gallery, id, name, prices, brand, inStock }) => {
+      const obj = {
+        product: gallery[0],
+        id: id,
+        name,
+        brand,
+        price: prices,
+        inStock,
+      };
+      return obj;
+    });
+    this.setState({ productAll: qwe });
 
-      for (let data of qwe) {
-        data.price.map(({ amount, currency }) => {
-          if (currency.symbol.trim() === this.state.activeS.trim()) {
-            return this.setState((prevState) => {
-              return prevState.priceHomePage.push(amount);
-            });
-          }
-          return amount;
-        });
-      }
-    } catch (error) {
-      console.log(error.message);
-      Notiflix.Notify.failure(`${error.message}`);
+    for (let data of qwe) {
+      data.price.map(({ amount, currency }) => {
+        if (currency.symbol.trim() === this.state.activeS.trim()) {
+          return this.setState((prevState) => {
+            return prevState.priceHomePage.push(amount);
+          });
+        }
+        return amount;
+      });
     }
   }
 
@@ -87,9 +79,17 @@ export default class HomePage extends Component {
     }
   };
 
+  addBag = async (e) => {
+    const { id } = e.currentTarget;
+    const product = await fetchProduct.getProductId(id);
+    this.setState((prevState) => ({
+      bag: [...prevState.bag, ...product],
+    }));
+  };
+
   render() {
-    const { productAll, priceHomePage } = this.state;
-    const { symbolCard } = this.props;
+    const { productAll, priceHomePage, bag } = this.state;
+    const { symbolCard, modalBag } = this.props;
     return (
       <main className="backdrop">
         <div className="container">
@@ -149,7 +149,11 @@ export default class HomePage extends Component {
                           })}
                       </p>
                       {id === this.state.id && inStock && (
-                        <button className="btn_add-basket">
+                        <button
+                          id={id}
+                          onClick={this.addBag}
+                          className="btn_add-basket"
+                        >
                           <img src={Basket} alt="Add to basket" />
                         </button>
                       )}
@@ -159,6 +163,7 @@ export default class HomePage extends Component {
                 }
               )}
           </ul>
+          {modalBag && <ModalBag items={bag} />}
         </div>
       </main>
     );

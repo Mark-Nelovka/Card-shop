@@ -6,6 +6,7 @@ import HomePage from "./components/homePage";
 class App extends Component {
   state = {
     symbol: "",
+    modalBag: false,
   };
 
   componentDidMount() {
@@ -17,12 +18,19 @@ class App extends Component {
     this.setState({ symbol: symbol });
   };
 
+  toggleModalBasket = () => {
+    this.setState({ modalBag: !this.state.modalBag });
+  };
+
   render() {
-    const { symbol } = this.state;
+    const { symbol, modalBag } = this.state;
     return (
       <div className="App">
-        <Header changeSymbol={this.changeSymbol} />
-        <HomePage symbolCard={symbol} />
+        <Header
+          changeSymbol={this.changeSymbol}
+          modalBag={this.toggleModalBasket}
+        />
+        <HomePage symbolCard={symbol} modalBag={modalBag} />
       </div>
     );
   }
