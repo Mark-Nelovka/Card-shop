@@ -7,6 +7,7 @@ class App extends Component {
   state = {
     symbol: "",
     modalBag: false,
+    itemsBag: null,
   };
 
   componentDidMount() {
@@ -22,15 +23,24 @@ class App extends Component {
     this.setState({ modalBag: !this.state.modalBag });
   };
 
+  addCounterBag = (arrItem) => {
+    this.setState({ itemsBag: arrItem.length });
+  };
+
   render() {
-    const { symbol, modalBag } = this.state;
+    const { symbol, modalBag, itemsBag } = this.state;
     return (
       <div className="App">
         <Header
           changeSymbol={this.changeSymbol}
           modalBag={this.toggleModalBasket}
+          counter={itemsBag}
         />
-        <HomePage symbolCard={symbol} modalBag={modalBag} />
+        <HomePage
+          symbolCard={symbol}
+          modalBag={modalBag}
+          itemBag={(i) => this.addCounterBag(i)}
+        />
       </div>
     );
   }

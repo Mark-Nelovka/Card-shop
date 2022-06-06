@@ -91,7 +91,11 @@ export default class Header extends Component {
 
           <button onClick={this.toggleModalBag} className="btn_basket ">
             <img src={Basket} alt="Basket" />
-            <div className="bag">1</div>
+            {JSON.parse(localStorage.getItem("productItems")) && (
+              <div className="bag">
+                {JSON.parse(localStorage.getItem("productItems")).length}
+              </div>
+            )}
           </button>
         </div>
       </header>
