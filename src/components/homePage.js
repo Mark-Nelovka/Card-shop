@@ -102,6 +102,11 @@ export default class HomePage extends Component {
     }
   };
 
+  // qwe = (e) => {
+  //   console.log(e.target);
+  //   console.log(e.currentTarget);
+  // };
+
   render() {
     const { productAll, priceHomePage, bag } = this.state;
     const { symbolCard, modalBag } = this.props;
@@ -115,6 +120,7 @@ export default class HomePage extends Component {
               ({ product, id, name, price, brand, inStock }, inx) => {
                 return (
                   <li
+                    // onClick={this.qwe}
                     onMouseOver={this.id}
                     onMouseLeave={this.id}
                     id={id}
