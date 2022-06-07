@@ -25,6 +25,7 @@ export default class HomePage extends Component {
     const result = await fetchProduct.getAllProduct();
     const products = result.map(
       ({ gallery, id, name, prices, brand, inStock }) => {
+        // console.log(id);
         const obj = {
           product: gallery[0],
           id: id,
