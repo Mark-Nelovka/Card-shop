@@ -37,66 +37,70 @@ export default class Header extends Component {
   render() {
     const { currencyModal, activeCurrency } = this.state;
     return (
-      <header className="container header">
-        <nav className="nav">
-          <ul className="nav_list">
-            <li className="nav_item">
-              <NavLink
-                className={({ isActive }) =>
-                  `${isActive ? "active" : "nav_link"}`
-                }
-                to="/Card-shop"
-              >
-                Women
-              </NavLink>
-            </li>
-            <li className="nav_item">
-              <NavLink
-                className={({ isActive }) =>
-                  `${isActive ? "active" : "nav_link"}`
-                }
-                to="*"
-              >
-                Men
-              </NavLink>
-            </li>
-            <li className="nav_item">
-              <NavLink
-                className={({ isActive }) =>
-                  `${isActive ? "active" : "nav_link"}`
-                }
-                to="*"
-              >
-                Kids
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
-        <div className="container_logo">
-          <img src={Logo} alt="Logo" className="logo" />
-        </div>
-        <div className="container_basket">
-          <span>{activeCurrency}</span>
+      <header className="header">
+        <div className="container">
+          <div className="header_container">
+            <nav className="nav">
+              <ul className="nav_list">
+                <li className="nav_item">
+                  <NavLink
+                    className={({ isActive }) =>
+                      `${isActive ? "active" : "nav_link"}`
+                    }
+                    to="/Card-shop"
+                  >
+                    Women
+                  </NavLink>
+                </li>
+                <li className="nav_item">
+                  <NavLink
+                    className={({ isActive }) =>
+                      `${isActive ? "active" : "nav_link"}`
+                    }
+                    to="*"
+                  >
+                    Men
+                  </NavLink>
+                </li>
+                <li className="nav_item">
+                  <NavLink
+                    className={({ isActive }) =>
+                      `${isActive ? "active" : "nav_link"}`
+                    }
+                    to="*"
+                  >
+                    Kids
+                  </NavLink>
+                </li>
+              </ul>
+            </nav>
+            <div className="container_logo">
+              <img src={Logo} alt="Logo" className="logo" />
+            </div>
+            <div className="container_basket">
+              <span>{activeCurrency}</span>
 
-          <button onClick={this.changeCurrency} className="btn_arrow">
-            <img
-              className="arrow_down"
-              src={currencyModal ? ArrowUp : ArrowDown}
-              alt="Arrow up"
-            />
-            {currencyModal && (
-              <ChoiceCurrency relevantCurrency={this.relevantCurrency} />
-            )}
-          </button>
+              <button onClick={this.changeCurrency} className="btn_arrow">
+                <img
+                  className="arrow_down"
+                  src={currencyModal ? ArrowUp : ArrowDown}
+                  alt="Arrow up"
+                />
+                {currencyModal && (
+                  <ChoiceCurrency relevantCurrency={this.relevantCurrency} />
+                )}
+              </button>
 
-          <button onClick={this.toggleModalBag} className="btn_basket ">
-            <img src={Basket} alt="Basket" />
-            {JSON.parse(localStorage.getItem("productItems")) && (
-              <div className="bag">
-                {JSON.parse(localStorage.getItem("productItems")).length}
-              </div>
-            )}
-          </button>
+              <button onClick={this.toggleModalBag} className="btn_basket ">
+                <img src={Basket} alt="Basket" />
+                {JSON.parse(localStorage.getItem("productItems")) && (
+                  <div className="bag">
+                    {JSON.parse(localStorage.getItem("productItems")).length}
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </header>
     );

@@ -90,7 +90,6 @@ export default class HomePage extends Component {
     const { bag } = this.state;
     const product = await fetchProduct.getProductId(id);
     const unique = bag.find((val) => val.id === id);
-
     if (!unique) {
       this.setState((prevState) => ({
         bag: [...prevState.bag, ...product],
@@ -155,7 +154,6 @@ export default class HomePage extends Component {
                                 data.currency.symbol.trim() ===
                                   symbolCard.trim()
                               ) {
-                                // console.log(val);
                                 return val;
                               }
                               return null;
@@ -177,8 +175,7 @@ export default class HomePage extends Component {
               }
             )}
         </ul>
-        {modalBag && <ModalBag items={bag} />}
-        {/* </div> */}
+        {modalBag && <ModalBag symbol={symbolCard} items={bag} />}
       </main>
     );
   }

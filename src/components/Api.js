@@ -42,8 +42,14 @@ export default class Api extends Component {
             product(id: "${id}") {
               name
               brand
+               prices {
+    amount
+    currency {
+      symbol
+    }
+  }
+              gallery 
               id
-              description
               attributes {
                 id
                 items {

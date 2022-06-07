@@ -7,3 +7,21 @@
   background-color: #fff;
   z-index: 2;
 }
+
+.bag_title {
+  margin-bottom: 32px;
+  font-family: "Raleway";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 160%;
+  color: #1d1f22;
+  & > span {
+    font-family: "Raleway";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 160%;
+    color: #1d1f22;
+  }
+}
