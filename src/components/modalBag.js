@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import { v4 } from "uuid";
 
 export default class ModalBag extends Component {
@@ -9,7 +9,11 @@ export default class ModalBag extends Component {
     counter: 1,
     active: null,
     activeId: null,
+    activeAtribute: null,
+    arr: [],
   };
+
+  qwe = React.createRef();
 
   componentDidMount() {
     const { symbol } = this.state;
@@ -46,17 +50,21 @@ export default class ModalBag extends Component {
   changeAmount = (e) => {
     const { textContent, id } = e.target;
     const { counter, itemsBag, symbol, total } = this.state;
-
+    this.setState((prevState) => ({
+      arr: [...prevState.arr, id],
+    }));
+    localStorage.setItem("qwe", JSON.stringify([...this.state.arr, id]));
     switch (textContent) {
       case "+":
         itemsBag.map((data) => {
           if (data.id === id) {
-            const prices = data.prices.map((data) => {
+            data.prices.map((data) => {
               if (data.currency.symbol.trim() === symbol.trim()) {
                 this.setState((prevState) => ({
                   total: prevState.total + data.amount,
                 }));
               }
+              return data;
             });
           }
           return total;
@@ -71,12 +79,13 @@ export default class ModalBag extends Component {
         }
         itemsBag.map((data) => {
           if (data.id === id) {
-            const prices = data.prices.map((data) => {
+            data.prices.map((data) => {
               if (data.currency.symbol.trim() === symbol.trim()) {
                 this.setState((prevState) => ({
                   total: prevState.total - data.amount,
                 }));
               }
+              return data;
             });
           }
           return total;
@@ -94,15 +103,25 @@ export default class ModalBag extends Component {
   selectActive = (e) => {
     const { id } = e.target;
     const { index } = e.target.dataset;
-
+    const { name } = e.target.dataset;
     this.setState({
       active: index,
       activeId: id,
+      activeAtribute: name,
     });
   };
 
   render() {
-    const { itemsBag, symbol, total, counter, active, activeId } = this.state;
+    const {
+      itemsBag,
+      symbol,
+      total,
+      counter,
+      active,
+      activeId,
+      activeAtribute,
+      arr,
+    } = this.state;
     return (
       <div className="modal_container-bag">
         {itemsBag ? (
@@ -113,7 +132,15 @@ export default class ModalBag extends Component {
             </p>
             <ul className="bag_list">
               {itemsBag.map(
-                ({ name, brand, gallery, id, attributes, prices }) => {
+                ({
+                  name,
+                  brand,
+                  gallery,
+                  id,
+                  attributes,
+                  prices,
+                  activeEl,
+                }) => {
                   return (
                     <li key={id} className="bag_item">
                       <div className="bag_container-info">
@@ -140,20 +167,22 @@ export default class ModalBag extends Component {
                               <div className="options_container">
                                 {dataAtr.items.map((dataItem, i) => {
                                   if (dataAtr.id === "Color") {
-                                    console.log(active);
                                     return (
                                       <button
                                         className={
                                           Number(active) === i &&
-                                          activeId === id
+                                          activeId === id &&
+                                          activeAtribute === dataAtr.id
                                             ? "options_color--active"
                                             : "options_color"
                                         }
                                         key={v4()}
                                         onClick={this.selectActive}
+                                        ref={this.qwe}
                                       >
                                         <div
                                           data-index={i}
+                                          data-name={dataAtr.id}
                                           id={id}
                                           style={{
                                             backgroundColor: dataItem.value,
@@ -167,14 +196,17 @@ export default class ModalBag extends Component {
                                   return (
                                     <button
                                       className={
-                                        Number(active) === i && activeId === id
+                                        Number(active) === i &&
+                                        activeId === id &&
+                                        activeAtribute === dataAtr.id
                                           ? "bag_change-options--active"
-                                          : "bag_change-options "
+                                          : "bag_change-options"
                                       }
                                       key={v4()}
                                       onClick={this.selectActive}
                                       id={id}
                                       data-index={i}
+                                      data-name={dataAtr.id}
                                     >
                                       {dataItem.value}
                                     </button>
@@ -185,16 +217,25 @@ export default class ModalBag extends Component {
                           );
                         })}
                       </div>
-
                       <div className="bag_container-counter">
                         <button id={id} onClick={this.changeAmount}>
                           +
                         </button>
-                        <span>{counter}</span>
+                        <span>
+                          {localStorage.getItem("qwe")
+                            ? arr.reduce((acc, val) => {
+                                if (id === val) {
+                                  acc += 1;
+                                }
+                                return acc;
+                              }, 0)
+                            : 1}
+                        </span>
                         <button id={id} onClick={this.changeAmount}>
                           -
                         </button>
                       </div>
+
                       <div>
                         <img
                           src={gallery}
