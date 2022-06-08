@@ -1,5 +1,4 @@
 import { Component } from "react";
-// import { v4 } from "uuid";
 import Basket from "../images/Basket_card.svg";
 import ModalBag from "./modalBag";
 import Api from "./Api";
@@ -102,14 +101,9 @@ export default class HomePage extends Component {
     }
   };
 
-  // qwe = (e) => {
-  //   console.log(e.target);
-  //   console.log(e.currentTarget);
-  // };
-
   render() {
-    const { productAll, priceHomePage, bag } = this.state;
-    const { symbolCard, modalBag } = this.props;
+    const { productAll, priceHomePage } = this.state;
+    const { symbolCard, modalBag, toggle } = this.props;
     return (
       <main className="container">
         <div className={modalBag ? "backdrop" : ""}></div>
@@ -181,7 +175,7 @@ export default class HomePage extends Component {
               }
             )}
         </ul>
-        {modalBag && <ModalBag symbol={symbolCard} items={bag} />}
+        {modalBag && <ModalBag symbol={symbolCard} toggle={toggle} />}
       </main>
     );
   }

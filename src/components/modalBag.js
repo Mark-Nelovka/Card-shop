@@ -13,9 +13,19 @@ export default class ModalBag extends Component {
     arr: [],
   };
 
-  qwe = React.createRef();
+  toggleBackdrop = (e) => {
+    if (e.key === "Escape") {
+      return this.props.toggle();
+    }
+    return;
+  };
+
+  componentWillUnmount() {
+    return window.removeEventListener("keydown", this.toggleBackdrop);
+  }
 
   componentDidMount() {
+    window.addEventListener("keydown", this.toggleBackdrop);
     const { symbol } = this.state;
 
     const itemStorage = JSON.parse(localStorage.getItem("productItems"));
@@ -51,21 +61,12 @@ export default class ModalBag extends Component {
     const { textContent, id } = e.target;
     const { counter, itemsBag, symbol, total } = this.state;
 
-    // console.log(Number(this.qwe.current.textContent) + 1);
-
     switch (textContent) {
       case "+":
         this.setState((prevState) => ({
           arr: [...prevState.arr, id],
         }));
         localStorage.setItem("qwe", JSON.stringify([...this.state.arr, id]));
-        // this.setState((prevState) => ({
-        //   arr: [...prevState.arr, { id, textContent }],
-        // }));
-        // localStorage.setItem(
-        //   "qwe",
-        //   JSON.stringify([...this.state.arr, { id, textContent }])
-        // );
         itemsBag.map((data) => {
           if (data.id === id) {
             data.prices.map((data) => {
@@ -84,21 +85,13 @@ export default class ModalBag extends Component {
         }));
         break;
       case "-":
-        if (counter < 2) {
-          return;
-        }
-
         const res = JSON.parse(localStorage.getItem("qwe"));
         const resLocal = res.indexOf(id);
         res.splice(resLocal, 1);
-        if (res.length === 1) {
+        if (counter === 0) {
+          localStorage.removeItem("qwe");
+          return;
         }
-        // const resLocal = res.map((data) => {
-        //   if (data.textContent === "+" && id === data.id) {
-        //     data.textContent = "-";
-        //   }
-        //   return data;
-        // });
         this.setState((prevState) => ({
           arr: res,
         }));
@@ -119,22 +112,6 @@ export default class ModalBag extends Component {
         this.setState((prevState) => ({
           counter: prevState.counter - 1,
         }));
-        // itemsBag.map((data) => {
-        //   if (data.id === id) {
-        //     data.prices.map((data) => {
-        //       if (data.currency.symbol.trim() === symbol.trim()) {
-        //         this.setState((prevState) => ({
-        //           total: prevState.total - data.amount,
-        //         }));
-        //       }
-        //       return data;
-        //     });
-        //   }
-        //   return total;
-        // });
-        // this.setState((prevState) => ({
-        //   counter: prevState.counter - 1,
-        // }));
         break;
 
       default:
@@ -260,10 +237,6 @@ export default class ModalBag extends Component {
                                 if (id === val) {
                                   acc += 1;
                                 }
-                                // if (id === val.id && val.textContent === "-") {
-                                //   acc -= 1;
-                                // }
-
                                 return acc;
                               }, 1)
                             : 1}

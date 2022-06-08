@@ -39,6 +39,7 @@ class App extends Component {
         <HomePage
           symbolCard={symbol}
           modalBag={modalBag}
+          toggle={this.toggleModalBasket}
           itemBag={(i) => this.addCounterBag(i)}
         />
       </div>
