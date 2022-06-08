@@ -6,7 +6,7 @@ export default class ModalBag extends Component {
     itemsBag: null,
     symbol: this.props.symbol,
     total: 0,
-    counter: 1,
+    counter: 0,
     active: null,
     activeId: null,
     activeAtribute: null,
@@ -50,12 +50,22 @@ export default class ModalBag extends Component {
   changeAmount = (e) => {
     const { textContent, id } = e.target;
     const { counter, itemsBag, symbol, total } = this.state;
-    this.setState((prevState) => ({
-      arr: [...prevState.arr, id],
-    }));
-    localStorage.setItem("qwe", JSON.stringify([...this.state.arr, id]));
+
+    // console.log(Number(this.qwe.current.textContent) + 1);
+
     switch (textContent) {
       case "+":
+        this.setState((prevState) => ({
+          arr: [...prevState.arr, id],
+        }));
+        localStorage.setItem("qwe", JSON.stringify([...this.state.arr, id]));
+        // this.setState((prevState) => ({
+        //   arr: [...prevState.arr, { id, textContent }],
+        // }));
+        // localStorage.setItem(
+        //   "qwe",
+        //   JSON.stringify([...this.state.arr, { id, textContent }])
+        // );
         itemsBag.map((data) => {
           if (data.id === id) {
             data.prices.map((data) => {
@@ -77,6 +87,22 @@ export default class ModalBag extends Component {
         if (counter < 2) {
           return;
         }
+
+        const res = JSON.parse(localStorage.getItem("qwe"));
+        const resLocal = res.indexOf(id);
+        res.splice(resLocal, 1);
+        if (res.length === 1) {
+        }
+        // const resLocal = res.map((data) => {
+        //   if (data.textContent === "+" && id === data.id) {
+        //     data.textContent = "-";
+        //   }
+        //   return data;
+        // });
+        this.setState((prevState) => ({
+          arr: res,
+        }));
+        localStorage.setItem("qwe", JSON.stringify(res));
         itemsBag.map((data) => {
           if (data.id === id) {
             data.prices.map((data) => {
@@ -93,6 +119,22 @@ export default class ModalBag extends Component {
         this.setState((prevState) => ({
           counter: prevState.counter - 1,
         }));
+        // itemsBag.map((data) => {
+        //   if (data.id === id) {
+        //     data.prices.map((data) => {
+        //       if (data.currency.symbol.trim() === symbol.trim()) {
+        //         this.setState((prevState) => ({
+        //           total: prevState.total - data.amount,
+        //         }));
+        //       }
+        //       return data;
+        //     });
+        //   }
+        //   return total;
+        // });
+        // this.setState((prevState) => ({
+        //   counter: prevState.counter - 1,
+        // }));
         break;
 
       default:
@@ -112,16 +154,8 @@ export default class ModalBag extends Component {
   };
 
   render() {
-    const {
-      itemsBag,
-      symbol,
-      total,
-      counter,
-      active,
-      activeId,
-      activeAtribute,
-      arr,
-    } = this.state;
+    const { itemsBag, symbol, total, active, activeId, activeAtribute, arr } =
+      this.state;
     return (
       <div className="modal_container-bag">
         {itemsBag ? (
@@ -178,7 +212,6 @@ export default class ModalBag extends Component {
                                         }
                                         key={v4()}
                                         onClick={this.selectActive}
-                                        ref={this.qwe}
                                       >
                                         <div
                                           data-index={i}
@@ -227,8 +260,12 @@ export default class ModalBag extends Component {
                                 if (id === val) {
                                   acc += 1;
                                 }
+                                // if (id === val.id && val.textContent === "-") {
+                                //   acc -= 1;
+                                // }
+
                                 return acc;
-                              }, 0)
+                              }, 1)
                             : 1}
                         </span>
                         <button id={id} onClick={this.changeAmount}>
