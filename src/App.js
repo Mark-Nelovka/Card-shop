@@ -37,7 +37,7 @@ class App extends Component {
           counter={itemsBag}
         />
         <HomePage
-          symbolCard={symbol}
+          symbol={symbol}
           modalBag={modalBag}
           toggle={this.toggleModalBasket}
           itemBag={(i) => this.addCounterBag(i)}
@@ -48,34 +48,3 @@ class App extends Component {
 }
 
 export default App;
-
-// query {
-//   product (id: "huarache-x-stussy-le") {
-//     inStock
-//   }
-// category {
-//   products {
-//     id
-//     description
-//     brand
-//     name
-//     inStock
-//     gallery
-//     category
-//     attributes{
-//       items{
-//         id
-//         value
-//         displayValue
-//       }
-//     }
-//     prices{
-//       amount
-//       currency{
-//         label
-//         symbol
-//       }
-//     }
-//   }
-// }
-//   }
