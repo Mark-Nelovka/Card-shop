@@ -15,6 +15,7 @@
 .gallery_list {
   display: flex;
   align-items: center;
+  // align-content: stretch;
   flex-wrap: wrap;
   justify-content: space-evenly;
 }

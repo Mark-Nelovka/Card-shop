@@ -1,5 +1,3 @@
-// * BAG
-
 .modal_container-bag {
   position: absolute;
   top: 81px;
@@ -31,7 +29,7 @@
 
 .bag_container-info {
   margin-right: 4px;
-  width: 136px;
+  padding-right: 16px;
 }
 
 .bag_item {
@@ -39,7 +37,6 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: nowrap;
-  max-width: 293px;
   margin-bottom: 40px;
 }
 
@@ -116,8 +113,6 @@
 .options_container {
   display: flex;
   align-items: center;
-  // flex-wrap: wrap;
-  // margin-bottom: 8px;
 }
 
 .options_color--active {
@@ -154,9 +149,14 @@
 
 .bag_container-counter {
   display: flex;
+  align-items: center;
   flex-direction: column;
+  justify-content: space-between;
+  align-self: stretch;
+  margin-left: auto;
   margin-right: 8px;
   & > button:last-child {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -166,8 +166,17 @@
     background-color: inherit;
     margin-top: 58px;
     cursor: pointer;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 11px;
+      width: 9px;
+      height: 1px;
+      background-color: #1d1f22;
+    }
   }
   & > button:first-child {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -177,6 +186,24 @@
     background-color: inherit;
     margin-bottom: 58px;
     cursor: pointer;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 7px;
+      display: inline-block;
+      height: 9px;
+      width: 1px;
+      background-color: #1d1f22;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      top: 11px;
+      display: inline-block;
+      width: 9px;
+      height: 1px;
+      background-color: #1d1f22;
+    }
   }
 
   & > span {
@@ -236,231 +263,4 @@
     background: #5ece7b;
     border: 1px solid #5ece7b;
   }
-}
-
-// * CART
-
-.cart_title {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 40px;
-  text-transform: uppercase;
-  color: #1d1f22;
-  margin-top: 75px;
-  margin-bottom: 55px;
-}
-
-.cart_item {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #e5e5e5;
-  padding-top: 24px;
-  padding-bottom: 24px;
-  &:first-child {
-    border-top: 1px solid #e5e5e5;
-  }
-}
-
-.cart_container-counter {
-  display: flex;
-  flex-direction: column;
-  margin-left: auto;
-  margin-right: 24px;
-  & > button:last-child {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border: 1px solid #1d1f22;
-    background-color: inherit;
-    margin-top: 80px;
-    cursor: pointer;
-  }
-  & > button:first-child {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border: 1px solid #1d1f22;
-    background-color: inherit;
-    margin-bottom: 98px;
-    cursor: pointer;
-  }
-  & > span {
-    text-align: center;
-  }
-}
-
-.cart_options-color--active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  width: 36px;
-  height: 36px;
-  padding: 1px 1px;
-  cursor: pointer;
-  background-color: inherit;
-  padding: 1px 1px;
-  border: 1px solid #5ece7b;
-  &:not(:last-child) {
-    margin-right: 8px;
-  }
-}
-
-.cart_options-color {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  width: 36px;
-  height: 36px;
-  padding: 1px 1px;
-  cursor: pointer;
-  background-color: inherit;
-  &:not(:last-child) {
-    margin-right: 8px;
-  }
-}
-
-.cart_options {
-  font-family: "Roboto Condensed";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 18px;
-  text-transform: uppercase;
-  color: #1d1f22;
-  margin-top: 20px;
-  margin-bottom: 16px;
-}
-
-.cart_denotation {
-  & > p:first-child {
-    font-family: "Raleway";
-    font-style: normal;
-    font-weight: 600;
-    font-size: 30px;
-    line-height: 27px;
-    color: #1d1f22;
-  }
-  & > p:nth-child(2) {
-    font-family: "Raleway";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 30px;
-    line-height: 27px;
-    color: #1d1f22;
-    margin-bottom: 20px;
-    margin-top: 16px;
-  }
-
-  & > p:last-child {
-    font-family: "Raleway";
-    font-style: normal;
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 24px;
-    color: #1d1f22;
-  }
-}
-
-.cart_change-options--active {
-  font-family: "Source Sans Pro";
-  display: inline-block;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  color: #fff;
-  border: 1px solid #1d1f22;
-  padding: 12px 25px 15px 25px;
-  text-align: center;
-  cursor: pointer;
-  background: black;
-  &:not(:last-child) {
-    margin-right: 8px;
-  }
-}
-
-.cart_change-options {
-  font-family: "Source Sans Pro";
-  display: inline-block;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 18px;
-  letter-spacing: 0.05em;
-  color: #1d1f22;
-  border: 1px solid #1d1f22;
-  padding: 12px 25px 15px 25px;
-  text-align: center;
-  cursor: pointer;
-  background: #fff;
-  &:not(:last-child) {
-    margin-right: 8px;
-  }
-}
-
-.cart_container-total {
-  margin-top: 32px;
-  display: flex;
-  align-items: center;
-}
-
-.cart_total-name {
-  & > p:nth-child(1n) {
-    font-family: "Raleway";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 28px;
-    color: #1d1f22;
-  }
-
-  & > p:nth-child(2) {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    margin-right: 5px;
-  }
-
-  & > p:nth-child(3) {
-    font-family: "Raleway";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 28px;
-    color: #1d1f22;
-  }
-}
-
-.cart_total-result > p {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 28px;
-  color: #1d1f22;
-  &:nth-child(2) {
-    margin-top: 8px;
-    margin-bottom: 8px;
-  }
-}
-
-.cart_btn-order {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 120%;
-  background: #5ece7b;
-  color: #ffffff;
-  border: none;
-  padding: 13px 116px;
-  margin-top: 16px;
 }

@@ -37,7 +37,7 @@ class App extends Component {
           counter={itemsBag}
         />
         <HomePage
-          symbol={symbol}
+          symbolCard={symbol}
           modalBag={modalBag}
           toggle={this.toggleModalBasket}
           itemBag={(i) => this.addCounterBag(i)}
