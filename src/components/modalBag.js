@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { v4 } from "uuid";
-// *! align-content для первой страницы
 export default class ModalBag extends Component {
   state = {
     itemsBag: null,
@@ -28,7 +27,6 @@ export default class ModalBag extends Component {
   }
 
   componentDidMount() {
-    console.log("asvsdvsd");
     window.addEventListener("keydown", this.toggleBackdrop);
     const { symbol } = this.state;
 
@@ -136,7 +134,6 @@ export default class ModalBag extends Component {
   };
 
   selectActive = (e) => {
-    console.log("object");
     const { id } = e.target;
     const { index } = e.target.dataset;
     const { name } = e.target.dataset;

@@ -8,6 +8,7 @@ class App extends Component {
     symbol: "",
     modalBag: false,
     itemsBag: null,
+    pageItem: false,
   };
 
   componentDidMount() {
@@ -41,7 +42,9 @@ class App extends Component {
           modalBag={modalBag}
           toggle={this.toggleModalBasket}
           itemBag={(i) => this.addCounterBag(i)}
+          // changePage={this.changePage}
         />
+        {/* {pageItem && <ItemPage />} */}
       </div>
     );
   }

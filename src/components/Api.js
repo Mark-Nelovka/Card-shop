@@ -15,6 +15,7 @@ export default class Api extends Component {
                 gallery
                 brand
                 inStock
+
                 name
                 prices {
                   amount
@@ -42,6 +43,7 @@ export default class Api extends Component {
             product(id: "${id}") {
               name
               brand
+               description
                prices {
     amount
     currency {

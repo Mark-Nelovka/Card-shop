@@ -2,6 +2,7 @@ import { Component } from "react";
 import { v4 } from "uuid";
 import Basket from "../images/Basket_card.svg";
 import ModalBag from "./modalBag";
+import ItemPage from "./ItemPage";
 import Api from "./Api";
 const fetchProduct = new Api();
 
@@ -15,6 +16,7 @@ export default class HomePage extends Component {
     bag: [],
     activePageCart: false,
     cart: false,
+    currentItem: null,
   };
 
   async componentDidMount() {
@@ -75,11 +77,14 @@ export default class HomePage extends Component {
   id = (e) => {
     const { id } = e.currentTarget;
     switch (e._reactName) {
-      case "onMouseOver":
+      case "onMouseMove":
         this.setState({ id: id });
         break;
       case "onMouseLeave":
         this.setState({ id: "" });
+        break;
+      case "onClick":
+        this.setState({ currentItem: id });
         break;
 
       default:
@@ -109,18 +114,20 @@ export default class HomePage extends Component {
   };
 
   render() {
-    const { productAll, priceHomePage, cart } = this.state;
+    const { productAll, priceHomePage, cart, currentItem, activeS } =
+      this.state;
     const { symbolCard, modalBag, toggle } = this.props;
     return (
       <main>
-        {cart ? (
+        {cart && (
           <ModalBag
             symbol={symbolCard}
             toggle={toggle}
             toggleCart={this.toggleCart}
             cart={cart}
           />
-        ) : (
+        )}
+        {!currentItem && !cart && (
           <>
             <div className={modalBag ? "backdrop" : ""}></div>
             <div className="container">
@@ -131,7 +138,8 @@ export default class HomePage extends Component {
                     ({ product, id, name, price, brand, inStock }, inx) => {
                       return (
                         <li
-                          onMouseOver={this.id}
+                          onClick={this.id}
+                          onMouseMove={this.id}
                           onMouseLeave={this.id}
                           id={id}
                           className={
@@ -204,6 +212,9 @@ export default class HomePage extends Component {
               )}
             </div>
           </>
+        )}
+        {currentItem && (
+          <ItemPage itemId={currentItem} currentSymbol={activeS} />
         )}
       </main>
     );
