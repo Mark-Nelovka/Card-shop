@@ -11,13 +11,12 @@ export default class ModalBag extends Component {
     activeId: null,
     activeAtribute: null,
     arr: [],
-    activePageCart: false,
+    activePageCart: this.props.cart,
     quantity: 0,
     sale: 0,
   };
 
   toggleBackdrop = (e) => {
-    console.log(e.key);
     if (e.key === "Escape") {
       return this.props.toggle();
     }
@@ -29,6 +28,7 @@ export default class ModalBag extends Component {
   }
 
   componentDidMount() {
+    console.log("asvsdvsd");
     window.addEventListener("keydown", this.toggleBackdrop);
     const { symbol } = this.state;
 
@@ -67,6 +67,7 @@ export default class ModalBag extends Component {
   }
 
   changeAmount = (e) => {
+    console.log("object");
     const { id } = e.target;
     const { name } = e.target.dataset;
     const { counter, itemsBag, symbol, total } = this.state;
@@ -135,6 +136,7 @@ export default class ModalBag extends Component {
   };
 
   selectActive = (e) => {
+    console.log("object");
     const { id } = e.target;
     const { index } = e.target.dataset;
     const { name } = e.target.dataset;
@@ -143,6 +145,11 @@ export default class ModalBag extends Component {
       activeId: id,
       activeAtribute: name,
     });
+  };
+
+  openCart = () => {
+    this.props.toggle();
+    this.props.toggleCart();
   };
 
   render() {
@@ -158,6 +165,7 @@ export default class ModalBag extends Component {
       quantity,
       sale,
     } = this.state;
+    const { toggleCart } = this.props;
     return (
       <div className={activePageCart ? "" : "modal_container-bag"}>
         {itemsBag ? (
@@ -392,7 +400,9 @@ export default class ModalBag extends Component {
                     </p>
                   </div>
                 </div>
-                <button className="cart_btn-order">Order</button>
+                <button onClick={toggleCart} className="cart_btn-order">
+                  Order
+                </button>
               </div>
             ) : (
               <div>
@@ -405,7 +415,7 @@ export default class ModalBag extends Component {
                 </div>
 
                 <div className="bag_container-btn">
-                  <button>View bag</button>
+                  <button onClick={this.openCart}>View bag</button>
                   <button>CHECK OUT</button>
                 </div>
               </div>
