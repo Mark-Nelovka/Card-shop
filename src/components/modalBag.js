@@ -27,6 +27,7 @@ export default class ModalBag extends Component {
   }
 
   componentDidMount() {
+    const arr = [];
     window.addEventListener("keydown", this.toggleBackdrop);
     const { symbol } = this.state;
 
@@ -44,6 +45,13 @@ export default class ModalBag extends Component {
           };
         }
       );
+
+      for (let data of item) {
+        const qwe = arr.find((v) => v.id === data.id);
+        if (!qwe) {
+          arr.push(data);
+        }
+      }
       const prices = item.flatMap((data) => {
         return data.prices;
       });
@@ -56,7 +64,7 @@ export default class ModalBag extends Component {
       }, 0);
       const sale = (price / 100) * 21;
       this.setState({
-        itemsBag: item,
+        itemsBag: arr,
         total: price,
         quantity: itemStorage.length,
         sale: sale,
@@ -179,7 +187,7 @@ export default class ModalBag extends Component {
             ) : (
               <p className="bag_title">
                 <span>My bag,</span>
-                {` ${itemsBag.length} items`}
+                {` ${quantity} items`}
               </p>
             )}
 

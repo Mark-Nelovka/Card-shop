@@ -130,17 +130,25 @@ export default class HomePage extends Component {
     }
     const { bag } = this.state;
     const productId = await fetchProduct.getProductId(id);
-    const unique = bag.find((val) => val.id === id);
-    if (!unique) {
-      this.setState((prevState) => ({
-        bag: [...prevState.bag, ...productId],
-      }));
-      this.props.countBag([...productId, ...bag]);
-      return localStorage.setItem(
-        "productItems",
-        JSON.stringify([...productId, ...bag])
-      );
-    }
+    localStorage.setItem(
+      "productItems",
+      JSON.stringify([...productId, ...bag])
+    );
+    this.setState((prevState) => ({
+      bag: [...prevState.bag, ...productId],
+    }));
+    this.props.countBag([...productId, ...bag]);
+    // const unique = bag.find((val) => val.id === id);
+    // if (!unique) {
+    //   this.setState((prevState) => ({
+    //     bag: [...prevState.bag, ...productId],
+    //   }));
+    //   this.props.countBag([...productId, ...bag]);
+    //   return localStorage.setItem(
+    //     "productItems",
+    //     JSON.stringify([...productId, ...bag])
+    //   );
+    // }
   };
 
   toggleCart = () => {
