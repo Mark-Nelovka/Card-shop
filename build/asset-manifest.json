@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/Card-shop/static/css/main.1acd06f2.css",
-    "main.js": "/Card-shop/static/js/main.1f66092b.js",
+    "main.css": "/Card-shop/static/css/main.ff3d57dd.css",
+    "main.js": "/Card-shop/static/js/main.9ae9d457.js",
     "static/media/logo-transparent.svg": "/Card-shop/static/media/logo-transparent.ab629de2c118be002c16bc88f8302d3b.svg",
     "static/media/Empty-Cart.svg": "/Card-shop/static/media/Empty-Cart.0fd3e60bc789db05c50b7c2f5d955633.svg",
     "static/media/Basket_card.svg": "/Card-shop/static/media/Basket_card.c3a495e04333eeb8c5eb068a47b06e20.svg",
     "index.html": "/Card-shop/index.html",
     "static/media/arrow-down.svg": "/Card-shop/static/media/arrow-down.f11e6e8e5963553644a323bc034d9f79.svg",
     "static/media/arrow-up.svg": "/Card-shop/static/media/arrow-up.27d55577646f338c08e6b0646bea0d22.svg",
-    "main.1acd06f2.css.map": "/Card-shop/static/css/main.1acd06f2.css.map",
-    "main.1f66092b.js.map": "/Card-shop/static/js/main.1f66092b.js.map"
+    "main.ff3d57dd.css.map": "/Card-shop/static/css/main.ff3d57dd.css.map",
+    "main.9ae9d457.js.map": "/Card-shop/static/js/main.9ae9d457.js.map"
   },
   "entrypoints": [
-    "static/css/main.1acd06f2.css",
-    "static/js/main.1f66092b.js"
+    "static/css/main.ff3d57dd.css",
+    "static/js/main.9ae9d457.js"
   ]
 }

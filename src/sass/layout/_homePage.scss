@@ -1,10 +1,5 @@
 .category-name {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 42px;
-  line-height: 160%;
-  color: #1d1f22;
+  @include text("Raleway", normal, 400, 42px, 160%, $basic-color);
   margin-bottom: 103px;
   margin-top: 75px;
   background-color: inherit;
@@ -61,49 +56,24 @@
 
 .gallery_brand {
   margin-top: 24px;
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 300;
-  font-size: 18px;
-  line-height: 160%;
-  color: #1d1f22;
+  @include text("Raleway", normal, 300, 18px, 160%, $basic-color);
 }
 
 .gallery_brand--disabled {
   margin-top: 24px;
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 300;
-  font-size: 18px;
-  line-height: 160%;
-  color: #8d8f9a;
+  @include text("Raleway", normal, 300, 18px, 160%, #8d8f9a);
 }
 
 .gallery_price {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 160%;
-  color: #1d1f22;
+  @include text("Raleway", normal, 500, 18px, 160%, $basic-color);
 }
 
 .gallery_price--disabled {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 160%;
-  color: #8d8f9a;
+  @include text("Raleway", normal, 300, 18px, 160%, #8d8f9a);
 }
 
 .gallery_out {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 160%;
-  color: #8d8f9a;
+  @include text("Raleway", normal, 400, 24px, 160%, #8d8f9a);
   position: absolute;
   left: 50%;
   top: 50%;

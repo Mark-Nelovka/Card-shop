@@ -25,23 +25,13 @@
 }
 
 .nav_link {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 120%;
+  @include text("Raleway", normal, 400, 16px, 120%, $basic-color);
   text-transform: uppercase;
-  color: #1d1f22;
 }
 
 .active {
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 120%;
+  @include text("Raleway", normal, 600, 16px, 120%, #5ece7b);
   text-transform: uppercase;
-  color: #5ece7b;
 
   &::after {
     content: "";
@@ -103,15 +93,10 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: #1d1f22;
-  color: #fff;
+  background-color: $basic-color;
   position: absolute;
   bottom: 8px;
   left: 13px;
   z-index: -1;
-  font-family: "Roboto";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 16px;
+  @include text("Roboto", normal, 700, 14px, 16px, #fff);
 }
