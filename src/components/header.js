@@ -57,7 +57,7 @@ export default class Header extends Component {
                     className={({ isActive }) =>
                       `${isActive ? "active" : "nav_link"}`
                     }
-                    to="/Card-shop"
+                    to="*"
                   >
                     Men
                   </NavLink>
@@ -67,7 +67,7 @@ export default class Header extends Component {
                     className={({ isActive }) =>
                       `${isActive ? "active" : "nav_link"}`
                     }
-                    to="/Card-shop"
+                    to="*"
                   >
                     Kids
                   </NavLink>

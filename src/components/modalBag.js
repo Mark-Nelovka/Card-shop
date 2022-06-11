@@ -48,9 +48,9 @@ export default class ModalBag extends Component {
         return data.prices;
       });
 
-      const price = prices.reduce((acc, val) => {
-        if (val.currency.symbol.trim() === symbol.trim()) {
-          return (acc += val.amount);
+      const price = prices.reduce((acc, { amount, currency }) => {
+        if (currency.symbol.trim() === symbol.trim()) {
+          return (acc += amount);
         }
         return acc;
       }, 0);
@@ -65,24 +65,26 @@ export default class ModalBag extends Component {
   }
 
   changeAmount = (e) => {
-    console.log("object");
     const { id } = e.target;
     const { name } = e.target.dataset;
     const { counter, itemsBag, symbol, total } = this.state;
 
     switch (name) {
       case "increment":
-        this.setState((prevState) => ({
-          arr: [...prevState.arr, id],
-          quantity: prevState.quantity + 1,
-        }));
-        localStorage.setItem("qwe", JSON.stringify([...this.state.arr, id]));
+        // * Передвинул ниже для теста this.setState((prevState) => ({
+        //   arr: [...prevState.arr, id],
+        //   quantity: prevState.quantity + 1,
+        // }));
+        localStorage.setItem(
+          "bagCounter",
+          JSON.stringify([...this.state.arr, id])
+        );
         itemsBag.map((data) => {
           if (data.id === id) {
-            data.prices.map((data) => {
-              if (data.currency.symbol.trim() === symbol.trim()) {
+            data.prices.map(({ amount, currency }) => {
+              if (currency.symbol.trim() === symbol.trim()) {
                 this.setState((prevState) => ({
-                  total: prevState.total + data.amount,
+                  total: prevState.total + amount,
                 }));
               }
               return data;
@@ -94,27 +96,29 @@ export default class ModalBag extends Component {
         this.setState((prevState) => ({
           counter: prevState.counter + 1,
           sale: (prevState.total / 100) * 21,
+          arr: [...prevState.arr, id],
+          quantity: prevState.quantity + 1,
         }));
         break;
       case "decrement":
-        const res = JSON.parse(localStorage.getItem("qwe"));
-        const resLocal = res.indexOf(id);
-        res.splice(resLocal, 1);
+        const arrBagCounter = JSON.parse(localStorage.getItem("bagCounter"));
+        const bagLocalIndex = arrBagCounter.indexOf(id);
+        arrBagCounter.splice(bagLocalIndex, 1);
         if (counter === 0) {
-          localStorage.removeItem("qwe");
+          localStorage.removeItem("bagCounter");
           return;
         }
-        this.setState((prevState) => ({
-          arr: res,
-          quantity: prevState.quantity - 1,
-        }));
-        localStorage.setItem("qwe", JSON.stringify(res));
+        // * Передвинул ниже для теста this.setState((prevState) => ({
+        //   arr: arrBagCounter,
+        //   quantity: prevState.quantity - 1,
+        // }));
+        localStorage.setItem("bagCounter", JSON.stringify(arrBagCounter));
         itemsBag.map((data) => {
           if (data.id === id) {
-            data.prices.map((data) => {
-              if (data.currency.symbol.trim() === symbol.trim()) {
+            data.prices.map(({ amount, currency }) => {
+              if (currency.symbol.trim() === symbol.trim()) {
                 this.setState((prevState) => ({
-                  total: prevState.total - data.amount,
+                  total: prevState.total - amount,
                 }));
               }
               return data;
@@ -125,6 +129,8 @@ export default class ModalBag extends Component {
         this.setState((prevState) => ({
           counter: prevState.counter - 1,
           sale: (prevState.total / 100) * 21,
+          arr: arrBagCounter,
+          quantity: prevState.quantity - 1,
         }));
         break;
 
@@ -147,6 +153,7 @@ export default class ModalBag extends Component {
   openCart = () => {
     this.props.toggle();
     this.props.toggleCart();
+    // localStorage.removeItem("bagCounter");
   };
 
   render() {
@@ -165,7 +172,7 @@ export default class ModalBag extends Component {
     const { toggleCart } = this.props;
     return (
       <div className={activePageCart ? "" : "modal_container-bag"}>
-        {itemsBag ? (
+        {itemsBag && itemsBag.length > 0 && (
           <div className={activePageCart ? "container" : ""}>
             {activePageCart ? (
               <p className="cart_title">Cart</p>
@@ -199,18 +206,16 @@ export default class ModalBag extends Component {
                           <p>{name}</p>
                           <p>
                             {symbol.trim()}
-                            {prices.map((data) => {
-                              if (
-                                data.currency.symbol.trim() === symbol.trim()
-                              ) {
-                                return data.amount;
+                            {prices.map(({ amount, currency }) => {
+                              if (currency.symbol.trim() === symbol.trim()) {
+                                return amount;
                               }
                               return "";
                             })}
                           </p>
                         </div>
 
-                        {attributes.map((dataAtr) => {
+                        {attributes.map((atr) => {
                           return (
                             <div key={v4()}>
                               <p
@@ -218,11 +223,11 @@ export default class ModalBag extends Component {
                                   activePageCart ? "cart_options" : "options"
                                 }
                               >
-                                {dataAtr.id}:
+                                {atr.id}:
                               </p>
                               <div className="options_container" key={v4()}>
-                                {dataAtr.items.map((dataItem, i) => {
-                                  if (dataAtr.id === "Color") {
+                                {atr.items.map(({ value }, i) => {
+                                  if (atr.id === "Color") {
                                     return (
                                       <>
                                         {activePageCart ? (
@@ -230,7 +235,7 @@ export default class ModalBag extends Component {
                                             className={
                                               Number(active) === i &&
                                               activeId === id &&
-                                              activeAtribute === dataAtr.id
+                                              activeAtribute === atr.id
                                                 ? "cart_options-color--active"
                                                 : "cart_options-color"
                                             }
@@ -239,10 +244,10 @@ export default class ModalBag extends Component {
                                           >
                                             <div
                                               data-index={i}
-                                              data-name={dataAtr.id}
+                                              data-name={atr.id}
                                               id={id}
                                               style={{
-                                                backgroundColor: dataItem.value,
+                                                backgroundColor: value,
                                                 width: "32px",
                                                 height: "32px",
                                               }}
@@ -253,7 +258,7 @@ export default class ModalBag extends Component {
                                             className={
                                               Number(active) === i &&
                                               activeId === id &&
-                                              activeAtribute === dataAtr.id
+                                              activeAtribute === atr.id
                                                 ? "options_color--active"
                                                 : "options_color"
                                             }
@@ -262,10 +267,10 @@ export default class ModalBag extends Component {
                                           >
                                             <div
                                               data-index={i}
-                                              data-name={dataAtr.id}
+                                              data-name={atr.id}
                                               id={id}
                                               style={{
-                                                backgroundColor: dataItem.value,
+                                                backgroundColor: value,
                                                 width: "16px",
                                                 height: "16px",
                                               }}
@@ -282,7 +287,7 @@ export default class ModalBag extends Component {
                                           className={
                                             Number(active) === i &&
                                             activeId === id &&
-                                            activeAtribute === dataAtr.id
+                                            activeAtribute === atr.id
                                               ? "cart_change-options--active"
                                               : "cart_change-options"
                                           }
@@ -290,16 +295,16 @@ export default class ModalBag extends Component {
                                           onClick={this.selectActive}
                                           id={id}
                                           data-index={i}
-                                          data-name={dataAtr.id}
+                                          data-name={atr.id}
                                         >
-                                          {dataItem.value}
+                                          {value}
                                         </button>
                                       ) : (
                                         <button
                                           className={
                                             Number(active) === i &&
                                             activeId === id &&
-                                            activeAtribute === dataAtr.id
+                                            activeAtribute === atr.id
                                               ? "bag_change-options--active"
                                               : "bag_change-options"
                                           }
@@ -307,9 +312,9 @@ export default class ModalBag extends Component {
                                           onClick={this.selectActive}
                                           id={id}
                                           data-index={i}
-                                          data-name={dataAtr.id}
+                                          data-name={atr.id}
                                         >
-                                          {dataItem.value}
+                                          {value}
                                         </button>
                                       )}
                                     </>
@@ -320,7 +325,6 @@ export default class ModalBag extends Component {
                           );
                         })}
                       </div>
-                      {/* <div className="qwe"> */}
                       <div
                         className={
                           activePageCart
@@ -336,7 +340,7 @@ export default class ModalBag extends Component {
                         ></button>
 
                         <span>
-                          {localStorage.getItem("qwe")
+                          {localStorage.getItem("bagCounter")
                             ? arr.reduce((acc, val) => {
                                 if (id === val) {
                                   acc += 1;
@@ -352,7 +356,6 @@ export default class ModalBag extends Component {
                         ></button>
                       </div>
                       {activePageCart ? (
-                        // <div className="cart_container-img" key={v4()}>
                         <img
                           src={gallery}
                           alt="Item in bag"
@@ -360,23 +363,18 @@ export default class ModalBag extends Component {
                           height="auto"
                         />
                       ) : (
-                        // </div>
-                        // <div className="asd" key={v4()}>
                         <img
                           src={gallery}
                           alt="Item in bag"
                           width="121"
                           height="auto"
                         />
-                        // </div>
                       )}
-                      {/* </div> */}
                     </li>
                   );
                 }
               )}
             </ul>
-            {/* <> */}
             {activePageCart ? (
               <div>
                 <div className="cart_container-total">
@@ -418,8 +416,6 @@ export default class ModalBag extends Component {
               </div>
             )}
           </div>
-        ) : (
-          <div>Корзина пуста</div>
         )}
       </div>
     );

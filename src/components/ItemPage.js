@@ -97,19 +97,19 @@ export default class ItemPage extends Component {
                     <p>{brand}</p>
                     <p>{name}</p>
                   </div>
-                  {attributes.map((dataAtr) => {
+                  {attributes.map((atr) => {
                     return (
                       <div key={v4()}>
-                        <p className="item_name-options">{dataAtr.id}:</p>
+                        <p className="item_name-options">{atr.id}:</p>
                         <div key={v4()}>
-                          {dataAtr.items.map((dataItem, i) => {
-                            if (dataAtr.id === "Color") {
+                          {atr.items.map(({ value }, i) => {
+                            if (atr.id === "Color") {
                               return (
                                 <button
                                   className={
                                     Number(active) === i &&
                                     activeId === id &&
-                                    activeAtribute === dataAtr.id
+                                    activeAtribute === atr.id
                                       ? "item_options-color--active"
                                       : "item_options-color"
                                   }
@@ -118,10 +118,10 @@ export default class ItemPage extends Component {
                                 >
                                   <div
                                     data-index={i}
-                                    data-name={dataAtr.id}
+                                    data-name={atr.id}
                                     id={id}
                                     style={{
-                                      backgroundColor: dataItem.value,
+                                      backgroundColor: value,
                                       width: "32px",
                                       height: "32px",
                                     }}
@@ -134,7 +134,7 @@ export default class ItemPage extends Component {
                                 className={
                                   Number(active) === i &&
                                   activeId === id &&
-                                  activeAtribute === dataAtr.id
+                                  activeAtribute === atr.id
                                     ? "item_change-options--active"
                                     : "item_change-options"
                                 }
@@ -142,9 +142,9 @@ export default class ItemPage extends Component {
                                 onClick={this.selectActive}
                                 id={id}
                                 data-index={i}
-                                data-name={dataAtr.id}
+                                data-name={atr.id}
                               >
-                                {dataItem.value}
+                                {value}
                               </button>
                             );
                           })}
@@ -156,11 +156,9 @@ export default class ItemPage extends Component {
                     <p>Price: </p>
                     <p>
                       {currentSymbol.trim()}
-                      {prices.map((data) => {
-                        if (
-                          data.currency.symbol.trim() === currentSymbol.trim()
-                        ) {
-                          return data.amount;
+                      {prices.map(({ currency, amount }) => {
+                        if (currency.symbol.trim() === currentSymbol.trim()) {
+                          return amount;
                         }
                         return "";
                       })}
