@@ -41,10 +41,8 @@ class App extends Component {
           symbolCard={symbol}
           modalBag={modalBag}
           toggle={this.toggleModalBasket}
-          itemBag={(i) => this.addCounterBag(i)}
-          // changePage={this.changePage}
+          countBag={(i) => this.addCounterBag(i)}
         />
-        {/* {pageItem && <ItemPage />} */}
       </div>
     );
   }

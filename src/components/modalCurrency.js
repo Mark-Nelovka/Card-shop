@@ -2,7 +2,7 @@ import { Component } from "react";
 import Api from "./Api";
 const fetchCur = new Api();
 
-export default class ChoiceCurrency extends Component {
+export default class ChoiceCurrencyModal extends Component {
   state = {
     currencies: null,
   };

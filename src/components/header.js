@@ -4,7 +4,7 @@ import Logo from "../images/logo-transparent.svg";
 import ArrowUp from "../images/arrow-up.svg";
 import Basket from "../images/Empty-Cart.svg";
 import ArrowDown from "../images/arrow-down.svg";
-import ChoiceCurrency from "./modalCurrency";
+import ChoiceCurrencyModal from "./modalCurrency";
 
 export default class Header extends Component {
   state = {
@@ -42,7 +42,7 @@ export default class Header extends Component {
           <div className="header_container">
             <nav className="nav">
               <ul className="nav_list">
-                <li className="nav_item">
+                <li>
                   <NavLink
                     className={({ isActive }) =>
                       `${isActive ? "active" : "nav_link"}`
@@ -52,32 +52,32 @@ export default class Header extends Component {
                     Women
                   </NavLink>
                 </li>
-                <li className="nav_item">
+                <li>
                   <NavLink
                     className={({ isActive }) =>
                       `${isActive ? "active" : "nav_link"}`
                     }
-                    to="*"
+                    to="/Card-shop"
                   >
                     Men
                   </NavLink>
                 </li>
-                <li className="nav_item">
+                <li>
                   <NavLink
                     className={({ isActive }) =>
                       `${isActive ? "active" : "nav_link"}`
                     }
-                    to="*"
+                    to="/Card-shop"
                   >
                     Kids
                   </NavLink>
                 </li>
               </ul>
             </nav>
-            <div className="container_logo">
+            <div className="logo_container">
               <img src={Logo} alt="Logo" className="logo" />
             </div>
-            <div className="container_basket">
+            <div className="basket_container">
               <span>{activeCurrency}</span>
 
               <button onClick={this.changeCurrency} className="btn_arrow">
@@ -87,7 +87,9 @@ export default class Header extends Component {
                   alt="Arrow up"
                 />
                 {currencyModal && (
-                  <ChoiceCurrency relevantCurrency={this.relevantCurrency} />
+                  <ChoiceCurrencyModal
+                    relevantCurrency={this.relevantCurrency}
+                  />
                 )}
               </button>
 

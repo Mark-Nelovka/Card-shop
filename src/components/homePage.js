@@ -12,20 +12,20 @@ export default class HomePage extends Component {
     productAll: [],
     id: "",
     priceHomePage: [],
-    activeS: "",
+    activeSymbol: "",
     bag: [],
     activePageCart: false,
-    cart: false,
+    cartPage: false,
     currentItem: null,
   };
 
   async componentDidMount() {
-    const activeCur = localStorage.getItem("currencySymbol");
+    const activeCurrencies = localStorage.getItem("currencySymbol");
     const qwe = JSON.parse(localStorage.getItem("qwe"));
     if (qwe) {
       this.setState({ bag: qwe });
     }
-    this.setState({ activeS: activeCur });
+    this.setState({ activeSymbol: activeCurrencies });
     const result = await fetchProduct.getAllProduct();
     const products = result.map(
       ({ gallery, id, name, prices, brand, inStock }) => {
@@ -44,7 +44,7 @@ export default class HomePage extends Component {
 
     for (let data of products) {
       data.price.map(({ amount, currency }) => {
-        if (currency.symbol.trim() === this.state.activeS.trim()) {
+        if (currency.symbol.trim() === this.state.activeSymbol.trim()) {
           return this.setState((prevState) => {
             return prevState.priceHomePage.push(amount);
           });
@@ -55,8 +55,8 @@ export default class HomePage extends Component {
   }
 
   componentDidUpdate(prev, state) {
-    if (state.activeS !== this.props.symbolCard) {
-      state.activeS = this.props.symbolCard;
+    if (state.activeSymbol !== this.props.symbolCard) {
+      state.activeSymbol = this.props.symbolCard;
       if (state.priceHomePage.length > 0) {
         state.priceHomePage = [];
       }
@@ -76,15 +76,19 @@ export default class HomePage extends Component {
 
   id = (e) => {
     const { id } = e.currentTarget;
+    const { btn } = e.target.dataset;
+
     switch (e._reactName) {
-      case "onMouseMove":
-        this.setState({ id: id });
-        break;
-      case "onMouseLeave":
-        this.setState({ id: "" });
+      case "onMouseOver":
+        if (id !== this.state.id) {
+          this.setState({ id: id });
+        }
         break;
       case "onClick":
-        this.setState({ currentItem: id });
+        if (btn === undefined) {
+          this.setState({ currentItem: id });
+        }
+
         break;
 
       default:
@@ -101,7 +105,7 @@ export default class HomePage extends Component {
       this.setState((prevState) => ({
         bag: [...prevState.bag, ...product],
       }));
-      this.props.itemBag([...product, ...bag]);
+      this.props.countBag([...product, ...bag]);
       return localStorage.setItem(
         "productItems",
         JSON.stringify([...product, ...bag])
@@ -110,24 +114,24 @@ export default class HomePage extends Component {
   };
 
   toggleCart = () => {
-    this.setState({ cart: !this.state.cart });
+    this.setState({ cartPage: !this.state.cartPage });
   };
 
   render() {
-    const { productAll, priceHomePage, cart, currentItem, activeS } =
+    const { productAll, priceHomePage, cartPage, currentItem, activeSymbol } =
       this.state;
     const { symbolCard, modalBag, toggle } = this.props;
     return (
       <main>
-        {cart && (
+        {cartPage && (
           <ModalBag
             symbol={symbolCard}
             toggle={toggle}
             toggleCart={this.toggleCart}
-            cart={cart}
+            cart={cartPage}
           />
         )}
-        {!currentItem && !cart && (
+        {!currentItem && !cartPage && (
           <>
             <div className={modalBag ? "backdrop" : ""}></div>
             <div className="container">
@@ -139,8 +143,7 @@ export default class HomePage extends Component {
                       return (
                         <li
                           onClick={this.id}
-                          onMouseMove={this.id}
-                          onMouseLeave={this.id}
+                          onMouseOver={this.id}
                           id={id}
                           className={
                             inStock ? "gallery_item" : "gallery_item--disabled"
@@ -190,8 +193,13 @@ export default class HomePage extends Component {
                               id={id}
                               onClick={this.addBag}
                               className="btn_add-basket"
+                              data-btn="button"
                             >
-                              <img src={Basket} alt="Add to basket" />
+                              <img
+                                src={Basket}
+                                alt="Add to basket"
+                                data-btn="button"
+                              />
                             </button>
                           )}
                           {!inStock && (
@@ -202,19 +210,23 @@ export default class HomePage extends Component {
                     }
                   )}
               </ul>
-              {modalBag && !cart && (
+              {modalBag && !cartPage && (
                 <ModalBag
                   symbol={symbolCard}
                   toggle={toggle}
                   toggleCart={this.toggleCart}
-                  cart={cart}
+                  cart={cartPage}
                 />
               )}
             </div>
           </>
         )}
         {currentItem && (
-          <ItemPage itemId={currentItem} currentSymbol={activeS} />
+          <ItemPage
+            itemId={currentItem}
+            currentSymbol={activeSymbol}
+            addBag={this.addBag}
+          />
         )}
       </main>
     );

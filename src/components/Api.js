@@ -6,7 +6,7 @@ import { Component } from "react";
 export default class Api extends Component {
   getAllProduct = async () => {
     try {
-      const result = await client.query({
+      const products = await client.query({
         query: gql`
           query {
             category {
@@ -28,10 +28,12 @@ export default class Api extends Component {
           }
         `,
       });
-      return result.data.category.products;
+      return products.data.category.products;
     } catch (error) {
       console.log(error.message);
-      Notiflix.Notify.failure(`${error.message}`);
+      Notiflix.Notify.failure(
+        "Oops, something went wrong. Please reload the page"
+      );
     }
   };
 
@@ -64,7 +66,9 @@ export default class Api extends Component {
       });
       return [product.data.product];
     } catch (error) {
-      Notiflix.Notify.failure(`${error.message}`);
+      Notiflix.Notify.failure(
+        "Oops, something went wrong. Please reload the page"
+      );
     }
   };
 
@@ -82,7 +86,9 @@ export default class Api extends Component {
       });
       return currencies.data.currencies;
     } catch (error) {
-      Notiflix.Notify.failure(`${error.message}`);
+      Notiflix.Notify.failure(
+        "Oops, something went wrong. Please reload the page"
+      );
     }
   };
 }

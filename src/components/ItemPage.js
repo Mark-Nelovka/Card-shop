@@ -11,18 +11,25 @@ export default class ItemPage extends Component {
     active: null,
     activeId: null,
     activeAtribute: null,
+    description: "",
   };
 
   async componentDidMount() {
     const fetchItem = await fetchProduct.getProductId(this.props.itemId);
 
-    const item = fetchItem.map((data) => {
-      return data.gallery[0];
-    });
+    let item = null;
+    for (let data of fetchItem) {
+      const str = data.description.replace(/<\/?[^>]+(>|$)/g, "");
+      item = {
+        current: data.gallery[0],
+        description: str,
+      };
+    }
 
     this.setState({
       item: fetchItem,
-      currentImage: item,
+      currentImage: item.current,
+      description: item.description,
     });
 
     for (let data of fetchItem) {
@@ -51,8 +58,15 @@ export default class ItemPage extends Component {
     });
   };
   render() {
-    const { item, currentImage, active, activeAtribute, activeId } = this.state;
-    const { currentSymbol } = this.props;
+    const {
+      item,
+      currentImage,
+      active,
+      activeAtribute,
+      activeId,
+      description,
+    } = this.state;
+    const { currentSymbol, addBag } = this.props;
     return (
       <div className="container">
         <div className="item_container">
@@ -76,7 +90,7 @@ export default class ItemPage extends Component {
             )}
           </div>
           {item &&
-            item.map(({ name, brand, id, attributes, prices, description }) => {
+            item.map(({ name, brand, id, attributes, prices }) => {
               return (
                 <div key={v4()}>
                   <div className="item_container-info">
@@ -152,8 +166,10 @@ export default class ItemPage extends Component {
                       })}
                     </p>
                   </div>
-                  <button className="item_btn-add">ADD TO CART</button>
-                  <div>{description}</div>
+                  <button onClick={addBag} id={id} className="item_btn-add">
+                    ADD TO CART
+                  </button>
+                  <p>{description}</p>
                 </div>
               );
             })}
