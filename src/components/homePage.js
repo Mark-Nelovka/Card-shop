@@ -122,9 +122,14 @@ export default class HomePage extends Component {
   };
 
   addBag = async (e) => {
+    localStorage.removeItem("bagCounter");
     const { id } = e.currentTarget;
+    const { btn } = e.target.dataset;
+    if (btn === undefined) {
+      this.setState({ currentItem: null });
+    }
     const { bag } = this.state;
-    const productId = await fetchProduct.getProductIdBag(id);
+    const productId = await fetchProduct.getProductId(id);
     const unique = bag.find((val) => val.id === id);
     if (!unique) {
       this.setState((prevState) => ({
@@ -272,19 +277,20 @@ export default class HomePage extends Component {
                     }
                   )}
               </ul>
-              {modalBag && !cartPage && bag.length > 0 && (
-                <ModalBag
-                  symbol={symbolCard}
-                  toggle={toggle}
-                  toggleCart={this.toggleCart}
-                  cart={cartPage}
-                />
-              )}
             </div>
           </>
         )}
+        {modalBag && (
+          <ModalBag
+            symbol={symbolCard}
+            toggle={toggle}
+            toggleCart={this.toggleCart}
+            cart={cartPage}
+          />
+        )}
         {currentItem && (
           <ItemPage
+            modalBag={modalBag}
             itemId={currentItem}
             currentSymbol={activeSymbol}
             addBag={this.addBag}

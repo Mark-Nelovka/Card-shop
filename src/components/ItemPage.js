@@ -66,9 +66,10 @@ export default class ItemPage extends Component {
       activeId,
       description,
     } = this.state;
-    const { currentSymbol, addBag } = this.props;
+    const { currentSymbol, addBag, modalBag } = this.props;
     return (
       <div className="container">
+        <div className={modalBag ? "backdrop" : ""}></div>
         <div className="item_container">
           <div className="container_photo">
             <ul className="item_list">

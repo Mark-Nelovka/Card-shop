@@ -38,7 +38,7 @@ export default class Api extends Component {
     }
   };
 
-  getProductIdBag = async (id) => {
+  getProductId = async (id) => {
     try {
       const product = await client.query({
         query: gql`

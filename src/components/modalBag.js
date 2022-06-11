@@ -153,7 +153,7 @@ export default class ModalBag extends Component {
   openCart = () => {
     this.props.toggle();
     this.props.toggleCart();
-    // localStorage.removeItem("bagCounter");
+    localStorage.removeItem("bagCounter");
   };
 
   render() {
