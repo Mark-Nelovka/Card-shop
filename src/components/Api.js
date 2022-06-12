@@ -73,42 +73,6 @@ export default class Api extends Component {
     }
   };
 
-  // getProductIdBagCounter = (id) => {
-  //   try {
-  //     const product = client.cache.readQuery({
-  //       query: gql`
-  //         query {
-  //           product(id: "${id}") {
-  //             name
-  //             brand
-  //              description
-  //              prices {
-  //   amount
-  //   currency {
-  //     symbol
-  //   }
-  // }
-  //             gallery
-  //             id
-  //             attributes {
-  //               id
-  //               items {
-  //                 value
-  //               }
-  //             }
-  //           }
-  //         }
-  //       `,
-  //     });
-  //     console.log(product);
-  //     // return [product.data.product];
-  //   } catch (error) {
-  //     Notiflix.Notify.failure(
-  //       "Oops, something went wrong. Please reload the page"
-  //     );
-  //   }
-  // };
-
   getCurrencies = async () => {
     try {
       const currencies = await client.query({

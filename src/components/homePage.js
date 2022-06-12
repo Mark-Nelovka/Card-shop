@@ -14,7 +14,7 @@ export default class HomePage extends Component {
     priceHomePage: [],
     activeSymbol: "",
     bag: [],
-    activePageCart: false,
+    // activePageCart: false,
     cartPage: false,
     currentItem: null,
     category: [],
@@ -23,13 +23,12 @@ export default class HomePage extends Component {
 
   async componentDidMount() {
     const activeCurrencies = localStorage.getItem("currencySymbol");
-    const bagCounter = JSON.parse(localStorage.getItem("bagCounter"));
+    const bagCounter = JSON.parse(localStorage.getItem("productItems"));
     const productInStock = [];
     const productInStockF = [];
     if (bagCounter) {
       this.setState({ bag: bagCounter });
     }
-    // * передвинул ниже для теста this.setState({ activeSymbol: activeCurrencies });
     const result = await fetchProduct.getAllProduct();
     const productsAll = result.map(
       ({ gallery, id, name, prices, brand, inStock, category }) => {
@@ -122,8 +121,7 @@ export default class HomePage extends Component {
   };
 
   addBag = async (e) => {
-    localStorage.removeItem("bagCounter");
-    const { id } = e.currentTarget;
+    const { id } = this.state;
     const { btn } = e.target.dataset;
     if (btn === undefined) {
       this.setState({ currentItem: null });
@@ -138,17 +136,6 @@ export default class HomePage extends Component {
       bag: [...prevState.bag, ...productId],
     }));
     this.props.countBag([...productId, ...bag]);
-    // const unique = bag.find((val) => val.id === id);
-    // if (!unique) {
-    //   this.setState((prevState) => ({
-    //     bag: [...prevState.bag, ...productId],
-    //   }));
-    //   this.props.countBag([...productId, ...bag]);
-    //   return localStorage.setItem(
-    //     "productItems",
-    //     JSON.stringify([...productId, ...bag])
-    //   );
-    // }
   };
 
   toggleCart = () => {
@@ -167,21 +154,12 @@ export default class HomePage extends Component {
       cartPage,
       currentItem,
       activeSymbol,
-      bag,
       category,
       currentCategory,
     } = this.state;
     const { symbolCard, modalBag, toggle } = this.props;
     return (
       <main>
-        {cartPage && (
-          <ModalBag
-            symbol={symbolCard}
-            toggle={toggle}
-            toggleCart={this.toggleCart}
-            cart={cartPage}
-          />
-        )}
         {!currentItem && !cartPage && (
           <>
             <div className={modalBag ? "backdrop" : ""}></div>
@@ -262,7 +240,7 @@ export default class HomePage extends Component {
                                     });
                                 })}
                             </p>
-                            {id === this.state.id && inStock && (
+                            {id === this.state.id && inStock && !modalBag && (
                               <button
                                 id={id}
                                 onClick={this.addBag}
@@ -294,6 +272,18 @@ export default class HomePage extends Component {
             toggle={toggle}
             toggleCart={this.toggleCart}
             cart={cartPage}
+            countBag={this.addBag}
+            getId={this.getId}
+          />
+        )}
+        {cartPage && (
+          <ModalBag
+            symbol={symbolCard}
+            toggle={toggle}
+            toggleCart={this.toggleCart}
+            cart={cartPage}
+            countBag={this.addBag}
+            getId={this.getId}
           />
         )}
         {currentItem && (

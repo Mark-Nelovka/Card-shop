@@ -13,6 +13,11 @@ class App extends Component {
 
   componentDidMount() {
     const symbol = localStorage.getItem("currencySymbol");
+    const counter = JSON.parse(localStorage.getItem("productItems"));
+    if (counter) {
+      this.setState({ itemsBag: counter.length });
+    }
+
     this.setState({ symbol: symbol });
   }
 

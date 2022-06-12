@@ -10,6 +10,7 @@ export default class Header extends Component {
   state = {
     currencyModal: false,
     activeCurrency: "",
+    counter: this.props.counter,
   };
   changeCurrency = () => {
     this.setState({ currencyModal: !this.state.currencyModal });
@@ -95,10 +96,8 @@ export default class Header extends Component {
 
               <button onClick={this.toggleModalBag} className="btn_basket ">
                 <img src={Basket} alt="Basket" />
-                {JSON.parse(localStorage.getItem("productItems")) && (
-                  <div className="bag">
-                    {JSON.parse(localStorage.getItem("productItems")).length}
-                  </div>
+                {this.props.counter && (
+                  <div className="bag">{this.props.counter}</div>
                 )}
               </button>
             </div>
