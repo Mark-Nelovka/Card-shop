@@ -14,7 +14,6 @@ export default class HomePage extends Component {
     priceHomePage: [],
     activeSymbol: "",
     bag: [],
-    // activePageCart: false,
     cartPage: false,
     currentItem: null,
     category: [],
@@ -120,6 +119,12 @@ export default class HomePage extends Component {
     }
   };
 
+  decrementBag = async (arr) => {
+    localStorage.setItem("productItems", JSON.stringify(arr));
+    this.setState({ bag: arr });
+    this.props.countBag(arr);
+  };
+
   addBag = async (e) => {
     const { id } = this.state;
     const { btn } = e.target.dataset;
@@ -156,13 +161,14 @@ export default class HomePage extends Component {
       activeSymbol,
       category,
       currentCategory,
+      bag,
     } = this.state;
     const { symbolCard, modalBag, toggle } = this.props;
     return (
       <main>
         {!currentItem && !cartPage && (
           <>
-            <div className={modalBag ? "backdrop" : ""}></div>
+            <div className={modalBag && bag.length > 0 ? "backdrop" : ""}></div>
             <div className="container">
               {category.length > 0 &&
                 category.map((categoryName) => {
@@ -266,7 +272,7 @@ export default class HomePage extends Component {
             </div>
           </>
         )}
-        {modalBag && (
+        {modalBag && bag.length > 0 && (
           <ModalBag
             symbol={symbolCard}
             toggle={toggle}
@@ -274,6 +280,7 @@ export default class HomePage extends Component {
             cart={cartPage}
             countBag={this.addBag}
             getId={this.getId}
+            decrementBag={this.decrementBag}
           />
         )}
         {cartPage && (
@@ -284,6 +291,7 @@ export default class HomePage extends Component {
             cart={cartPage}
             countBag={this.addBag}
             getId={this.getId}
+            decrementBag={this.decrementBag}
           />
         )}
         {currentItem && (

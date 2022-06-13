@@ -7,11 +7,11 @@ export default class ModalBag extends Component {
     itemsBag: null,
     symbol: this.props.symbol,
     total: 0,
-    counter: 0,
+    // counter: 0,
     active: null,
     activeId: null,
     activeAtribute: null,
-    arr: [],
+    // arr: [],
     activePageCart: this.props.cart,
     quantity: 0,
     sale: 0,
@@ -104,23 +104,43 @@ export default class ModalBag extends Component {
         });
 
         this.setState((prevState) => ({
-          counter: prevState.counter + 1,
+          // counter: prevState.counter + 1,
           sale: (prevState.total / 100) * 21,
-          arr: [...prevState.arr, id],
           quantity: prevState.quantity + 1,
           bagCounter: [...prevState.bagCounter, ...addProduct],
         }));
         break;
       case "decrement":
+        const uniqueId = [];
+        const uniqueProduct = [];
         const arrBagCounter = JSON.parse(localStorage.getItem("productItems"));
-        const bagLocalIndex = arrBagCounter.indexOf(id);
+        const bagLocalIndex = arrBagCounter.findIndex((v) => v.id === id);
         arrBagCounter.splice(bagLocalIndex, 1);
-        // if (counter === 0) {
-        //   localStorage.removeItem("bagCounter");
-        //   return;
-        // }
+        const counterRepete = arrBagCounter.reduce((acc, val) => {
+          if (id === val.id) {
+            acc += 1;
+          }
+          return acc;
+        }, 0);
+
+        if (counterRepete === 0) {
+          for (let data of arrBagCounter) {
+            if (!uniqueId.includes(data.id)) {
+              uniqueId.push(data.id);
+              uniqueProduct.push(data);
+            }
+          }
+          this.setState({ itemsBag: uniqueProduct });
+        }
+        if (arrBagCounter.length < 1) {
+          if (this.props.cart) {
+            this.props.toggleCart();
+          } else {
+            this.props.toggle();
+          }
+        }
         localStorage.setItem("productItems", JSON.stringify(arrBagCounter));
-        this.props.countBag(e);
+        this.props.decrementBag(arrBagCounter);
         itemsBag.map((data) => {
           if (data.id === id) {
             data.prices.map(({ amount, currency }) => {
@@ -135,9 +155,8 @@ export default class ModalBag extends Component {
           return total;
         });
         this.setState((prevState) => ({
-          counter: prevState.counter - 1,
+          // counter: prevState.counter - 1,
           sale: (prevState.total / 100) * 21,
-          arr: arrBagCounter,
           quantity: prevState.quantity - 1,
           bagCounter: arrBagCounter,
         }));
@@ -161,10 +180,7 @@ export default class ModalBag extends Component {
 
   openCart = () => {
     this.props.toggle();
-
     this.props.toggleCart();
-    // this.setState({ activePageCart: true });
-    localStorage.removeItem("bagCounter");
   };
 
   render() {

@@ -10,7 +10,6 @@ export default class Header extends Component {
   state = {
     currencyModal: false,
     activeCurrency: "",
-    counter: this.props.counter,
   };
   changeCurrency = () => {
     this.setState({ currencyModal: !this.state.currencyModal });
@@ -32,11 +31,15 @@ export default class Header extends Component {
   }
 
   toggleModalBag = () => {
+    if (this.props.counter === 0) {
+      return;
+    }
     this.props.modalBag();
   };
 
   render() {
     const { currencyModal, activeCurrency } = this.state;
+    const { counter } = this.props;
     return (
       <header className="header">
         <div className="container">
@@ -96,9 +99,7 @@ export default class Header extends Component {
 
               <button onClick={this.toggleModalBag} className="btn_basket ">
                 <img src={Basket} alt="Basket" />
-                {this.props.counter && (
-                  <div className="bag">{this.props.counter}</div>
-                )}
+                {counter > 0 && <div className="bag">{counter}</div>}
               </button>
             </div>
           </div>
