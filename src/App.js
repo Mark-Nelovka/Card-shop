@@ -13,9 +13,14 @@ class App extends Component {
 
   componentDidMount() {
     const symbol = localStorage.getItem("currencySymbol");
+
     const counter = JSON.parse(localStorage.getItem("productItems"));
     if (counter) {
       this.setState({ itemsBag: counter.length });
+    }
+    if (!symbol) {
+      this.setState({ symbol: "$" });
+      return;
     }
 
     this.setState({ symbol: symbol });
@@ -35,6 +40,7 @@ class App extends Component {
 
   render() {
     const { symbol, modalBag, itemsBag } = this.state;
+    console.log(symbol);
     return (
       <div className="App">
         <Header

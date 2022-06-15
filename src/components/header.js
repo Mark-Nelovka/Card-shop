@@ -31,7 +31,7 @@ export default class Header extends Component {
   }
 
   toggleModalBag = () => {
-    if (this.props.counter === 0) {
+    if (this.props.counter === null || this.props.counter === 0) {
       return;
     }
     this.props.modalBag();

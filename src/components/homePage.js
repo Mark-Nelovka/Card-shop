@@ -18,10 +18,14 @@ export default class HomePage extends Component {
     currentItem: null,
     category: [],
     currentCategory: null,
+    saveAtrribute: [],
   };
 
   async componentDidMount() {
     const activeCurrencies = localStorage.getItem("currencySymbol");
+    if (activeCurrencies) {
+      this.setState({ activeSymbol: activeCurrencies });
+    }
     const bagCounter = JSON.parse(localStorage.getItem("productItems"));
     const productInStock = [];
     const productInStockF = [];
@@ -60,9 +64,9 @@ export default class HomePage extends Component {
       .filter((v, i, a) => a.indexOf(v) === i);
     this.setState({
       productAll: products,
-      activeSymbol: activeCurrencies,
       category: category,
       currentCategory: category[0],
+      activeSymbol: this.props.symbolCard,
     });
 
     for (let data of products) {
@@ -95,6 +99,7 @@ export default class HomePage extends Component {
       }
       return;
     }
+    return;
   }
 
   getId = (e) => {
@@ -119,6 +124,22 @@ export default class HomePage extends Component {
     }
   };
 
+  saveAtrribute = (unique) => {
+    if (this.state.saveAtrribute.includes(unique)) {
+      const findUniqueKey = this.state.saveAtrribute.findIndex(
+        (v) => v === unique
+      );
+      this.state.saveAtrribute.splice(findUniqueKey, 1);
+      const state = this.state.saveAtrribute;
+
+      this.setState({ saveAtrribute: state });
+      return;
+    }
+    this.setState((prevState) => ({
+      saveAtrribute: [...prevState.saveAtrribute, unique],
+    }));
+  };
+
   decrementBag = async (arr) => {
     localStorage.setItem("productItems", JSON.stringify(arr));
     this.setState({ bag: arr });
@@ -133,18 +154,48 @@ export default class HomePage extends Component {
     }
     const { bag } = this.state;
     const productId = await fetchProduct.getProductId(id);
-    localStorage.setItem(
-      "productItems",
-      JSON.stringify([...productId, ...bag])
+    const item = productId.map(
+      ({ name, brand, gallery, id, prices, attributes }) => {
+        const attributesWithChange = attributes.map((val) => {
+          const itemsWithUniqueKey = [];
+
+          for (let items of val.items) {
+            itemsWithUniqueKey.push({
+              uniqueIdForButton: v4(),
+              items,
+            });
+          }
+          return {
+            id: val.id,
+            items: itemsWithUniqueKey,
+          };
+        });
+        return {
+          name,
+          brand,
+          gallery: gallery[0],
+          id,
+          attributes: attributesWithChange,
+          prices,
+        };
+      }
     );
+    localStorage.setItem("productItems", JSON.stringify([...item, ...bag]));
     this.setState((prevState) => ({
-      bag: [...prevState.bag, ...productId],
+      bag: [...prevState.bag, ...item],
     }));
-    this.props.countBag([...productId, ...bag]);
+    this.props.countBag([...item, ...bag]);
   };
 
-  toggleCart = () => {
-    this.setState({ cartPage: !this.state.cartPage });
+  toggleCart = (textButton) => {
+    if (textButton !== "View bag") {
+      this.setState({
+        saveAtrribute: [],
+      });
+    }
+    this.setState({
+      cartPage: !this.state.cartPage,
+    });
   };
 
   changeCategory = (e) => {
@@ -164,6 +215,8 @@ export default class HomePage extends Component {
       bag,
     } = this.state;
     const { symbolCard, modalBag, toggle } = this.props;
+    console.log(symbolCard);
+    console.log(activeSymbol);
     return (
       <main>
         {!currentItem && !cartPage && (
@@ -280,6 +333,7 @@ export default class HomePage extends Component {
             countBag={this.addBag}
             getId={this.getId}
             decrementBag={this.decrementBag}
+            saveAtrribute={this.saveAtrribute}
           />
         )}
         {cartPage && (
@@ -291,6 +345,8 @@ export default class HomePage extends Component {
             countBag={this.addBag}
             getId={this.getId}
             decrementBag={this.decrementBag}
+            saveAtrribute={this.saveAtrribute}
+            saveAtrributeArr={this.state.saveAtrribute}
           />
         )}
         {currentItem && (

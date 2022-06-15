@@ -8,17 +8,42 @@ export default class ItemPage extends Component {
     item: null,
     price: 0,
     currentImage: null,
-    active: null,
-    activeId: null,
-    activeAtribute: null,
     description: "",
+    arrAtrributes: [],
   };
 
   async componentDidMount() {
     const fetchItem = await fetchProduct.getProductId(this.props.itemId);
+    const itemId = fetchItem.map(
+      ({ name, brand, gallery, id, prices, attributes, description }) => {
+        const attributesWithChange = attributes.map((val) => {
+          const itemsWithUniqueKey = [];
+
+          for (let items of val.items) {
+            itemsWithUniqueKey.push({
+              uniqueIdForButton: v4(),
+              items,
+            });
+          }
+          return {
+            id: val.id,
+            items: itemsWithUniqueKey,
+          };
+        });
+        return {
+          name,
+          brand,
+          description,
+          gallery,
+          id,
+          attributes: attributesWithChange,
+          prices,
+        };
+      }
+    );
 
     let item = null;
-    for (let data of fetchItem) {
+    for (let data of itemId) {
       const str = data.description.replace(/<\/?[^>]+(>|$)/g, "");
       item = {
         current: data.gallery[0],
@@ -27,12 +52,12 @@ export default class ItemPage extends Component {
     }
 
     this.setState({
-      item: fetchItem,
+      item: itemId,
       currentImage: item.current,
       description: item.description,
     });
 
-    for (let data of fetchItem) {
+    for (let data of itemId) {
       data.prices.map(({ amount, currency }) => {
         if (currency.symbol.trim() === this.props.currentSymbol.trim()) {
           return this.setState({ price: amount });
@@ -48,24 +73,24 @@ export default class ItemPage extends Component {
   };
 
   selectActive = (e) => {
-    const { id } = e.target;
-    const { index } = e.target.dataset;
-    const { name } = e.target.dataset;
-    this.setState({
-      active: index,
-      activeId: id,
-      activeAtribute: name,
-    });
+    const { unique } = e.target.dataset;
+
+    if (this.state.arrAtrributes.includes(unique)) {
+      const findUniqueKey = this.state.arrAtrributes.findIndex(
+        (v) => v === unique
+      );
+      this.state.arrAtrributes.splice(findUniqueKey, 1);
+      const state = this.state.arrAtrributes;
+      this.setState({ arrAtrributes: state });
+      return;
+    }
+    this.setState((prevState) => ({
+      arrAtrributes: [...prevState.arrAtrributes, unique],
+    }));
   };
+
   render() {
-    const {
-      item,
-      currentImage,
-      active,
-      activeAtribute,
-      activeId,
-      description,
-    } = this.state;
+    const { item, currentImage, description, arrAtrributes } = this.state;
     const { currentSymbol, addBag, modalBag } = this.props;
     return (
       <div className="container">
@@ -103,14 +128,12 @@ export default class ItemPage extends Component {
                       <div key={v4()}>
                         <p className="item_name-options">{atr.id}:</p>
                         <div key={v4()}>
-                          {atr.items.map(({ value }, i) => {
+                          {atr.items.map(({ uniqueIdForButton, items }) => {
                             if (atr.id === "Color") {
                               return (
                                 <button
                                   className={
-                                    Number(active) === i &&
-                                    activeId === id &&
-                                    activeAtribute === atr.id
+                                    arrAtrributes.includes(uniqueIdForButton)
                                       ? "item_options-color--active"
                                       : "item_options-color"
                                   }
@@ -118,11 +141,9 @@ export default class ItemPage extends Component {
                                   onClick={this.selectActive}
                                 >
                                   <div
-                                    data-index={i}
-                                    data-name={atr.id}
-                                    id={id}
+                                    data-unique={uniqueIdForButton}
                                     style={{
-                                      backgroundColor: value,
+                                      backgroundColor: items.value,
                                       width: "32px",
                                       height: "32px",
                                     }}
@@ -133,19 +154,15 @@ export default class ItemPage extends Component {
                             return (
                               <button
                                 className={
-                                  Number(active) === i &&
-                                  activeId === id &&
-                                  activeAtribute === atr.id
+                                  arrAtrributes.includes(uniqueIdForButton)
                                     ? "item_change-options--active"
                                     : "item_change-options"
                                 }
                                 key={v4()}
                                 onClick={this.selectActive}
-                                id={id}
-                                data-index={i}
-                                data-name={atr.id}
+                                data-unique={uniqueIdForButton}
                               >
-                                {value}
+                                {items.value}
                               </button>
                             );
                           })}
