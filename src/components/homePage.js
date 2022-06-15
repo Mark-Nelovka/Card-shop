@@ -215,8 +215,6 @@ export default class HomePage extends Component {
       bag,
     } = this.state;
     const { symbolCard, modalBag, toggle } = this.props;
-    console.log(symbolCard);
-    console.log(activeSymbol);
     return (
       <main>
         {!currentItem && !cartPage && (
