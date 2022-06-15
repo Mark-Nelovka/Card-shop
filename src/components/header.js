@@ -57,24 +57,10 @@ export default class Header extends Component {
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `${isActive ? "active" : "nav_link"}`
-                    }
-                    to="*"
-                  >
-                    Men
-                  </NavLink>
+                  <button className="nav_link">Men</button>
                 </li>
                 <li>
-                  <NavLink
-                    className={({ isActive }) =>
-                      `${isActive ? "active" : "nav_link"}`
-                    }
-                    to="*"
-                  >
-                    Kids
-                  </NavLink>
+                  <button className="nav_link">Kids</button>
                 </li>
               </ul>
             </nav>

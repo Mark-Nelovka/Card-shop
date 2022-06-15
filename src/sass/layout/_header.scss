@@ -27,6 +27,9 @@
 .nav_link {
   @include text("Raleway", normal, 400, 16px, 120%, $basic-color);
   text-transform: uppercase;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
 }
 
 .active {

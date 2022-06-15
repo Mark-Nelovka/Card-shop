@@ -67,10 +67,10 @@ export default class HomePage extends Component {
 
     for (let data of products) {
       data.price.map(({ amount, currency }) => {
-        if (currency.symbol.trim() === this.state.activeSymbol.trim()) {
-          return this.setState((prevState) => {
-            return prevState.priceHomePage.push(amount);
-          });
+        if (currency.symbol.trim() === this.props.symbolCard.trim()) {
+          return this.setState((prevState) => ({
+            priceHomePage: [...prevState.priceHomePage, amount],
+          }));
         }
         return amount;
       });
@@ -226,25 +226,23 @@ export default class HomePage extends Component {
                               }
                             >
                               {symbolCard}
-                              {productAll.length > 0 &&
-                                price.map((data) => {
-                                  return priceHomePage
-                                    .filter(
-                                      (val, ind, arr) =>
-                                        arr.indexOf(val) === ind
-                                    )
-                                    .find((val, ind) => {
-                                      if (
-                                        inx === ind &&
-                                        val === data.amount &&
-                                        data.currency.symbol.trim() ===
-                                          symbolCard.trim()
-                                      ) {
-                                        return val;
-                                      }
-                                      return null;
-                                    });
-                                })}
+                              {price.map((data) => {
+                                return priceHomePage
+                                  .filter(
+                                    (val, ind, arr) => arr.indexOf(val) === ind
+                                  )
+                                  .find((val, ind) => {
+                                    if (
+                                      inx === ind &&
+                                      val === data.amount &&
+                                      data.currency.symbol.trim() ===
+                                        symbolCard.trim()
+                                    ) {
+                                      return val;
+                                    }
+                                    return null;
+                                  });
+                              })}
                             </p>
                             {id === this.state.id && inStock && !modalBag && (
                               <button
@@ -266,6 +264,7 @@ export default class HomePage extends Component {
                           </li>
                         );
                       }
+                      return "";
                     }
                   )}
               </ul>

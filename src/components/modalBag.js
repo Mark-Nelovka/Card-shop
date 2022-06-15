@@ -7,11 +7,8 @@ export default class ModalBag extends Component {
     itemsBag: null,
     symbol: this.props.symbol,
     total: 0,
-    // counter: 0,
-    active: null,
-    activeId: null,
-    activeAtribute: null,
-    // arr: [],
+    counter: 0,
+    arrAtrributes: [],
     activePageCart: this.props.cart,
     quantity: 0,
     sale: 0,
@@ -38,19 +35,33 @@ export default class ModalBag extends Component {
     if (itemStorage) {
       const item = itemStorage.map(
         ({ name, brand, gallery, id, prices, attributes }) => {
+          const attributesWithChange = attributes.map((val) => {
+            const itemsWithUniqueKey = [];
+
+            for (let items of val.items) {
+              itemsWithUniqueKey.push({
+                uniqueIdForButton: v4(),
+                items,
+              });
+            }
+            return {
+              id: val.id,
+              items: itemsWithUniqueKey,
+            };
+          });
           return {
             name,
             brand,
             gallery: gallery[0],
             id,
-            attributes,
+            attributes: attributesWithChange,
             prices,
           };
         }
       );
 
       for (let data of item) {
-        const qwe = arr.find((v) => v.id === data.id);
+        const qwe = arr.find((v) => v.id === data.id); // * удалить и проверить будет ли работать без этого
         if (!qwe) {
           arr.push(data);
         }
@@ -65,7 +76,9 @@ export default class ModalBag extends Component {
         }
         return acc;
       }, 0);
+
       const sale = (price / 100) * 21;
+
       this.setState({
         itemsBag: arr,
         total: price,
@@ -83,7 +96,7 @@ export default class ModalBag extends Component {
 
     switch (name) {
       case "increment":
-        const addProduct = await fetchProduct.getProductId(id);
+        const addProduct = await fetchProduct.getProductId(id); // * повторяется запись в сторедж и в локал в функции addBag в HomePage;
         localStorage.setItem(
           "productItems",
           JSON.stringify([...this.state.bagCounter, ...addProduct])
@@ -104,7 +117,6 @@ export default class ModalBag extends Component {
         });
 
         this.setState((prevState) => ({
-          // counter: prevState.counter + 1,
           sale: (prevState.total / 100) * 21,
           quantity: prevState.quantity + 1,
           bagCounter: [...prevState.bagCounter, ...addProduct],
@@ -155,7 +167,6 @@ export default class ModalBag extends Component {
           return total;
         });
         this.setState((prevState) => ({
-          // counter: prevState.counter - 1,
           sale: (prevState.total / 100) * 21,
           quantity: prevState.quantity - 1,
           bagCounter: arrBagCounter,
@@ -168,14 +179,20 @@ export default class ModalBag extends Component {
   };
 
   selectActive = (e) => {
-    const { id } = e.target;
-    const { index } = e.target.dataset;
-    const { name } = e.target.dataset;
-    this.setState({
-      active: index,
-      activeId: id,
-      activeAtribute: name,
-    });
+    const { unique } = e.target.dataset;
+
+    if (this.state.arrAtrributes.includes(unique)) {
+      const findUniqueKey = this.state.arrAtrributes.findIndex(
+        (v) => v === unique
+      );
+      this.state.arrAtrributes.splice(findUniqueKey, 1);
+      const state = this.state.arrAtrributes;
+      this.setState({ arrAtrributes: state });
+      return;
+    }
+    this.setState((prevState) => ({
+      arrAtrributes: [...prevState.arrAtrributes, unique],
+    }));
   };
 
   openCart = () => {
@@ -186,11 +203,9 @@ export default class ModalBag extends Component {
   render() {
     const {
       itemsBag,
-      symbol,
       total,
-      active,
-      activeId,
-      activeAtribute,
+      symbol,
+      arrAtrributes,
       activePageCart,
       quantity,
       sale,
@@ -225,15 +240,16 @@ export default class ModalBag extends Component {
                         key={v4()}
                       >
                         <div
+                          key={v4()}
                           className={
                             activePageCart
                               ? "cart_denotation"
                               : "bag_denotation"
                           }
                         >
-                          <p>{brand}</p>
-                          <p>{name}</p>
-                          <p>
+                          <p key={v4()}>{brand}</p>
+                          <p key={v4()}>{name}</p>
+                          <p key={v4()}>
                             {symbol.trim()}
                             {prices.map(({ amount, currency }) => {
                               if (currency.symbol.trim() === symbol.trim()) {
@@ -248,6 +264,7 @@ export default class ModalBag extends Component {
                           return (
                             <div key={v4()}>
                               <p
+                                // key={v4()}
                                 className={
                                   activePageCart ? "cart_options" : "options"
                                 }
@@ -255,100 +272,100 @@ export default class ModalBag extends Component {
                                 {atr.id}:
                               </p>
                               <div className="options_container" key={v4()}>
-                                {atr.items.map(({ value }, i) => {
-                                  if (atr.id === "Color") {
+                                {atr.items.map(
+                                  ({ uniqueIdForButton, items }) => {
+                                    console.log(items);
+                                    if (atr.id === "Color") {
+                                      return (
+                                        <>
+                                          {activePageCart ? (
+                                            <button
+                                              className={
+                                                arrAtrributes.includes(
+                                                  uniqueIdForButton
+                                                )
+                                                  ? "cart_options-color--active"
+                                                  : "cart_options-color"
+                                              }
+                                              // key={v4()}
+                                              onClick={this.selectActive}
+                                            >
+                                              <div
+                                                // key={v4()}
+                                                data-unique={uniqueIdForButton}
+                                                style={{
+                                                  // backgroundColor: items.value,
+                                                  width: "32px",
+                                                  height: "32px",
+                                                }}
+                                              ></div>
+                                            </button>
+                                          ) : (
+                                            <button
+                                              className={
+                                                arrAtrributes.includes(
+                                                  uniqueIdForButton
+                                                )
+                                                  ? "options_color--active"
+                                                  : "options_color"
+                                              }
+                                              // key={v4()}
+                                              onClick={this.selectActive}
+                                            >
+                                              <div
+                                                // key={v4()}
+                                                data-unique={uniqueIdForButton}
+                                                id={id}
+                                                style={{
+                                                  // backgroundColor: items.value,
+                                                  width: "16px",
+                                                  height: "16px",
+                                                }}
+                                              ></div>
+                                            </button>
+                                          )}
+                                        </>
+                                      );
+                                    }
                                     return (
                                       <>
                                         {activePageCart ? (
                                           <button
+                                            // key={v4()}
                                             className={
-                                              Number(active) === i &&
-                                              activeId === id &&
-                                              activeAtribute === atr.id
-                                                ? "cart_options-color--active"
-                                                : "cart_options-color"
+                                              arrAtrributes.includes(
+                                                uniqueIdForButton
+                                              )
+                                                ? "cart_change-options--active"
+                                                : "cart_change-options"
                                             }
-                                            key={v4()}
                                             onClick={this.selectActive}
+                                            data-unique={uniqueIdForButton}
                                           >
-                                            <div
-                                              data-index={i}
-                                              data-name={atr.id}
-                                              id={id}
-                                              style={{
-                                                backgroundColor: value,
-                                                width: "32px",
-                                                height: "32px",
-                                              }}
-                                            ></div>
+                                            {/* {items.value} */}
                                           </button>
                                         ) : (
                                           <button
-                                            className={
-                                              Number(active) === i &&
-                                              activeId === id &&
-                                              activeAtribute === atr.id
-                                                ? "options_color--active"
-                                                : "options_color"
-                                            }
+                                            // className={
+                                            //   Number(active) === i &&
+                                            //   activeId === id &&
+                                            //   activeAtribute === atr.id
+                                            //     ? "bag_change-options--active"
+                                            //     : "bag_change-options"
+                                            // }
                                             key={v4()}
                                             onClick={this.selectActive}
+                                            id={id}
+                                            // data-index={i}
+                                            data-name={atr.id}
                                           >
-                                            <div
-                                              data-index={i}
-                                              data-name={atr.id}
-                                              id={id}
-                                              style={{
-                                                backgroundColor: value,
-                                                width: "16px",
-                                                height: "16px",
-                                              }}
-                                            ></div>
+                                            {/* {"acsdcsd"} */}
                                           </button>
                                         )}
                                       </>
                                     );
                                   }
-                                  return (
-                                    <>
-                                      {activePageCart ? (
-                                        <button
-                                          className={
-                                            Number(active) === i &&
-                                            activeId === id &&
-                                            activeAtribute === atr.id
-                                              ? "cart_change-options--active"
-                                              : "cart_change-options"
-                                          }
-                                          key={v4()}
-                                          onClick={this.selectActive}
-                                          id={id}
-                                          data-index={i}
-                                          data-name={atr.id}
-                                        >
-                                          {value}
-                                        </button>
-                                      ) : (
-                                        <button
-                                          className={
-                                            Number(active) === i &&
-                                            activeId === id &&
-                                            activeAtribute === atr.id
-                                              ? "bag_change-options--active"
-                                              : "bag_change-options"
-                                          }
-                                          key={v4()}
-                                          onClick={this.selectActive}
-                                          id={id}
-                                          data-index={i}
-                                          data-name={atr.id}
-                                        >
-                                          {value}
-                                        </button>
-                                      )}
-                                    </>
-                                  );
-                                })}
+                                )}
                               </div>
                             </div>
                           );
@@ -361,9 +378,10 @@ export default class ModalBag extends Component {
                             ? "cart_container-counter"
                             : "bag_container-counter"
                         }
-                        key={v4()}
+                        // key={v4()}
                       >
                         <button
+                          // key={v4()}
                           id={id}
                           data-name="increment"
                           onClick={this.changeAmount}
@@ -380,6 +398,7 @@ export default class ModalBag extends Component {
                             : 1}
                         </span>
                         <button
+                          // key={v4()}
                           id={id}
                           data-name="decrement"
                           onClick={this.changeAmount}
@@ -387,6 +406,7 @@ export default class ModalBag extends Component {
                       </div>
                       {activePageCart ? (
                         <img
+                          // key={v4()}
                           src={gallery}
                           alt="Item in bag"
                           width="200px"
@@ -394,6 +414,7 @@ export default class ModalBag extends Component {
                         />
                       ) : (
                         <img
+                          // key={v4()}
                           src={gallery}
                           alt="Item in bag"
                           width="121"
