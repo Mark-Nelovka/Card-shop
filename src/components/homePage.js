@@ -4,7 +4,6 @@ import Basket from "../images/Basket_card.svg";
 import ModalBag from "./modalBag";
 import ItemPage from "./ItemPage";
 import Api from "./Api";
-import Notiflix from "notiflix";
 const fetchProduct = new Api();
 
 export default class HomePage extends Component {
