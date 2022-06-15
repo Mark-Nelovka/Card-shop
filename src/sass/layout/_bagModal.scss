@@ -196,14 +196,7 @@
   align-items: center;
   justify-content: space-between;
   & > button {
-    @include text(
-      "Raleway",
-      normal,
-      600,
-      14px,
-      120%,
-      $basic-color
-    ); // * Посмотреть!
+    @include text("Raleway", normal, 600, 14px, 120%, $basic-color);
     cursor: pointer;
     text-transform: uppercase;
     background: #ffffff;

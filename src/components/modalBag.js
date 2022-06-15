@@ -1,3 +1,4 @@
+import Notiflix from "notiflix";
 import React, { Component } from "react";
 import { v4 } from "uuid";
 import Api from "./Api";
@@ -105,6 +106,7 @@ export default class ModalBag extends Component {
         }, 0);
 
         if (counterRepete === 0) {
+          Notiflix.Notify.success("Item has been removed from cart");
           for (let data of arrBagCounter) {
             if (!uniqueId.includes(data.id)) {
               uniqueId.push(data.id);
@@ -149,7 +151,6 @@ export default class ModalBag extends Component {
 
   selectActive = (e) => {
     const { unique } = e.target.dataset;
-    // console.log(unique);
     if (this.state.arrAtrributes.includes(unique)) {
       const findUniqueKey = this.state.arrAtrributes.findIndex(
         (v) => v === unique
@@ -235,7 +236,6 @@ export default class ModalBag extends Component {
                           return (
                             <div key={v4()}>
                               <p
-                                // key={v4()}
                                 className={
                                   activePageCart ? "cart_options" : "options"
                                 }
@@ -257,11 +257,9 @@ export default class ModalBag extends Component {
                                                   ? "cart_options-color--active"
                                                   : "cart_options-color"
                                               }
-                                              // key={v4()}
                                               onClick={this.selectActive}
                                             >
                                               <div
-                                                // key={v4()}
                                                 data-unique={uniqueIdForButton}
                                                 style={{
                                                   backgroundColor: items.value,
@@ -279,11 +277,9 @@ export default class ModalBag extends Component {
                                                   ? "options_color--active"
                                                   : "options_color"
                                               }
-                                              // key={v4()}
                                               onClick={this.selectActive}
                                             >
                                               <div
-                                                // key={v4()}
                                                 data-unique={uniqueIdForButton}
                                                 id={id}
                                                 style={{
@@ -301,7 +297,6 @@ export default class ModalBag extends Component {
                                       <>
                                         {activePageCart ? (
                                           <button
-                                            // key={v4()}
                                             className={
                                               saveAtrributeArr.includes(
                                                 uniqueIdForButton
@@ -346,10 +341,8 @@ export default class ModalBag extends Component {
                             ? "cart_container-counter"
                             : "bag_container-counter"
                         }
-                        // key={v4()}
                       >
                         <button
-                          // key={v4()}
                           id={id}
                           data-name="increment"
                           onClick={this.changeAmount}
@@ -364,7 +357,6 @@ export default class ModalBag extends Component {
                           }, 0)}
                         </span>
                         <button
-                          // key={v4()}
                           id={id}
                           data-name="decrement"
                           onClick={this.changeAmount}
@@ -372,7 +364,6 @@ export default class ModalBag extends Component {
                       </div>
                       {activePageCart ? (
                         <img
-                          // key={v4()}
                           src={gallery}
                           alt="Item in bag"
                           width="200px"
@@ -380,7 +371,6 @@ export default class ModalBag extends Component {
                         />
                       ) : (
                         <img
-                          // key={v4()}
                           src={gallery}
                           alt="Item in bag"
                           width="121"
