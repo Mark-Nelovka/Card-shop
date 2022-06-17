@@ -113,7 +113,9 @@ export default class ModalBag extends Component {
         }, 0);
 
         if (counterRepete === 0) {
-          Notiflix.Notify.success("Item has been removed from cart");
+          Notiflix.Notify.success("Item has been removed from cart", {
+            timeout: 1500,
+          });
           for (let data of arrBagCounter) {
             if (!uniqueId.includes(data.id)) {
               uniqueId.push(data.id);
