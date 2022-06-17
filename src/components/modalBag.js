@@ -1,5 +1,9 @@
 import Notiflix from "notiflix";
 import React, { Component } from "react";
+import Prices from "./prices";
+import Atrributes from "./atrributes";
+import Count from "./countAndImage";
+import Total from "./total";
 import { v4 } from "uuid";
 import Api from "./Api";
 const fetchProduct = new Api();
@@ -16,19 +20,22 @@ export default class ModalBag extends Component {
   };
 
   toggleBackdrop = (e) => {
-    if (e.key === "Escape") {
+    const { value } = e.target.classList;
+    if (e.key === "Escape" || value === "backdrop") {
       return this.props.toggle();
     }
     return;
   };
 
   componentWillUnmount() {
+    window.removeEventListener("click", this.toggleBackdrop);
     return window.removeEventListener("keydown", this.toggleBackdrop);
   }
 
   componentDidMount() {
     const arr = [];
     window.addEventListener("keydown", this.toggleBackdrop);
+    window.addEventListener("click", this.toggleBackdrop);
     const { symbol } = this.state;
 
     const itemStorage = JSON.parse(localStorage.getItem("productItems"));
@@ -185,246 +192,92 @@ export default class ModalBag extends Component {
     } = this.state;
     const { toggleCart, getId, symbol, saveAtrributeArr } = this.props;
     return (
-      <div className={activePageCart ? "" : "modal_container-bag"}>
-        {itemsBag && (
-          <div className={activePageCart ? "container" : ""}>
-            {activePageCart ? (
-              <p className="cart_title">Cart</p>
-            ) : (
-              <p className="bag_title">
-                <span>My bag,</span>
-                {` ${quantity} items`}
-              </p>
-            )}
+      <>
+        <div className={!activePageCart ? "backdrop" : ""}></div>
 
-            <ul className="bag_list">
-              {itemsBag.map(
-                ({ name, brand, gallery, id, attributes, prices }) => {
-                  return (
-                    <li
-                      key={v4()}
-                      className={activePageCart ? "cart_item" : "bag_item"}
-                      id={id}
-                      onMouseOver={getId}
-                    >
-                      <div
-                        className={!activePageCart ? "bag_container-info" : ""}
+        <div className={activePageCart ? "" : "modal_container-bag"}>
+          {itemsBag && (
+            <div className={activePageCart ? "container" : ""}>
+              {activePageCart ? (
+                <p className="cart_title">Cart</p>
+              ) : (
+                <p className="bag_title">
+                  <span>My bag,</span>
+                  {` ${quantity} items`}
+                </p>
+              )}
+
+              <ul className="bag_list">
+                {itemsBag.map(
+                  ({ name, brand, gallery, id, attributes, prices }) => {
+                    return (
+                      <li
                         key={v4()}
+                        className={activePageCart ? "cart_item" : "bag_item"}
+                        id={id}
+                        onMouseOver={getId}
                       >
                         <div
-                          key={v4()}
                           className={
-                            activePageCart
-                              ? "cart_denotation"
-                              : "bag_denotation"
+                            !activePageCart ? "bag_container-info" : ""
                           }
+                          key={v4()}
                         >
-                          <p key={v4()}>{brand}</p>
-                          <p key={v4()}>{name}</p>
-                          <p key={v4()}>
-                            {symbol.trim()}
-                            {prices.map(({ amount, currency }) => {
-                              if (currency.symbol.trim() === symbol.trim()) {
-                                return amount;
-                              }
-                              return "";
-                            })}
-                          </p>
-                        </div>
-
-                        {attributes.map((atr) => {
-                          return (
-                            <div key={v4()}>
-                              <p
-                                className={
-                                  activePageCart ? "cart_options" : "options"
-                                }
-                              >
-                                {atr.id}:
-                              </p>
-                              <div className="options_container" key={v4()}>
-                                {atr.items.map(
-                                  ({ uniqueIdForButton, items }) => {
-                                    if (atr.id === "Color") {
-                                      return (
-                                        <>
-                                          {activePageCart ? (
-                                            <button
-                                              className={
-                                                saveAtrributeArr.includes(
-                                                  uniqueIdForButton
-                                                )
-                                                  ? "cart_options-color--active"
-                                                  : "cart_options-color"
-                                              }
-                                              onClick={this.selectActive}
-                                            >
-                                              <div
-                                                data-unique={uniqueIdForButton}
-                                                style={{
-                                                  backgroundColor: items.value,
-                                                  width: "32px",
-                                                  height: "32px",
-                                                }}
-                                              ></div>
-                                            </button>
-                                          ) : (
-                                            <button
-                                              className={
-                                                arrAtrributes.includes(
-                                                  uniqueIdForButton
-                                                )
-                                                  ? "options_color--active"
-                                                  : "options_color"
-                                              }
-                                              onClick={this.selectActive}
-                                            >
-                                              <div
-                                                data-unique={uniqueIdForButton}
-                                                id={id}
-                                                style={{
-                                                  backgroundColor: items.value,
-                                                  width: "16px",
-                                                  height: "16px",
-                                                }}
-                                              ></div>
-                                            </button>
-                                          )}
-                                        </>
-                                      );
-                                    }
-                                    return (
-                                      <>
-                                        {activePageCart ? (
-                                          <button
-                                            className={
-                                              saveAtrributeArr.includes(
-                                                uniqueIdForButton
-                                              )
-                                                ? "cart_change-options--active"
-                                                : "cart_change-options"
-                                            }
-                                            onClick={this.selectActive}
-                                            data-unique={uniqueIdForButton}
-                                          >
-                                            {items.value}
-                                          </button>
-                                        ) : (
-                                          <button
-                                            className={
-                                              arrAtrributes.includes(
-                                                uniqueIdForButton
-                                              )
-                                                ? "bag_change-options--active"
-                                                : "bag_change-options"
-                                            }
-                                            key={v4()}
-                                            onClick={this.selectActive}
-                                            data-unique={uniqueIdForButton}
-                                          >
-                                            {items.value}
-                                          </button>
-                                        )}
-                                      </>
-                                    );
-                                  }
-                                )}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div
-                        id={id}
-                        className={
-                          activePageCart
-                            ? "cart_container-counter"
-                            : "bag_container-counter"
-                        }
-                      >
-                        <button
-                          id={id}
-                          data-name="increment"
-                          onClick={this.changeAmount}
-                        ></button>
-
-                        <span id={id}>
-                          {bagCounter.reduce((acc, val) => {
-                            if (id === val.id) {
-                              acc += 1;
+                          <div
+                            key={v4()}
+                            className={
+                              activePageCart
+                                ? "cart_denotation"
+                                : "bag_denotation"
                             }
-                            return acc;
-                          }, 0)}
-                        </span>
-                        <button
-                          id={id}
-                          data-name="decrement"
-                          onClick={this.changeAmount}
-                        ></button>
-                      </div>
-                      {activePageCart ? (
-                        <img
-                          src={gallery}
-                          alt="Item in bag"
-                          width="200px"
-                          height="auto"
-                        />
-                      ) : (
-                        <img
-                          src={gallery}
-                          alt="Item in bag"
-                          width="121"
-                          height="auto"
-                        />
-                      )}
-                    </li>
-                  );
-                }
-              )}
-            </ul>
-            {activePageCart ? (
-              <div>
-                <div className="cart_container-total">
-                  <div className="cart_total-name">
-                    <p>Tax 21%:</p>
-                    <p>Quantity: </p>
-                    <p>Total:</p>
-                  </div>
-                  <div className="cart_total-result">
-                    <p>
-                      {symbol.trim()}
-                      {sale.toFixed(2)}
-                    </p>
-                    <p>{quantity}</p>
-                    <p>
-                      {symbol.trim()}
-                      {total.toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-                <button onClick={toggleCart} className="cart_btn-order">
-                  Order
-                </button>
-              </div>
-            ) : (
-              <div>
-                <div className="bag_container-price">
-                  <p>Total</p>
-                  <p>
-                    {symbol.trim()}
-                    {total.toFixed(2)}
-                  </p>
-                </div>
-
-                <div className="bag_container-btn">
-                  <button onClick={this.openCart}>View bag</button>
-                  <button>CHECK OUT</button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+                          >
+                            <p key={v4()}>{brand}</p>
+                            <p key={v4()}>{name}</p>
+                            <p key={v4()}>
+                              {symbol.trim()}
+                              <Prices prices={prices} symbol={symbol} />
+                            </p>
+                          </div>
+                          {
+                            <Atrributes
+                              attributes={attributes}
+                              saveAtrributeArr={saveAtrributeArr}
+                              selectActive={this.selectActive}
+                              activePageCart={activePageCart}
+                              arrAtrributes={arrAtrributes}
+                              id={id}
+                            />
+                          }
+                        </div>
+                        {
+                          <Count
+                            id={id}
+                            activePageCart={activePageCart}
+                            changeAmount={this.changeAmount}
+                            bagCounter={bagCounter}
+                            gallery={gallery}
+                          />
+                        }
+                      </li>
+                    );
+                  }
+                )}
+              </ul>
+              {
+                <Total
+                  activePageCart={activePageCart}
+                  symbol={symbol}
+                  sale={sale}
+                  quantity={quantity}
+                  total={total}
+                  toggleCart={toggleCart}
+                  openCart={this.openCart}
+                />
+              }
+            </div>
+          )}
+        </div>
+      </>
     );
   }
 }

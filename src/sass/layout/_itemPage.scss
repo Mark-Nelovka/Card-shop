@@ -36,6 +36,29 @@
   margin-bottom: 8px;
 }
 
+.item_options-color {
+  border: none;
+  padding: 1px 1px;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  background-color: inherit;
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+}
+
+.item_options-color--active {
+  border: 1px solid #5ece7b;
+  padding: 1px 1px;
+  cursor: pointer;
+
+  background-color: inherit;
+  &:not(:last-child) {
+    margin-right: 8px;
+  }
+}
+
 .item_change-options {
   @include text("Source Sans Pro", normal, 400, 16px, 18px, $basic-color);
   border: 1px solid $basic-color;

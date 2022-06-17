@@ -7,7 +7,7 @@ class App extends Component {
     symbol: "",
     modalBag: false,
     itemsBag: null,
-    pageItem: false,
+    pageItem: true,
   };
 
   componentDidMount() {
@@ -30,6 +30,9 @@ class App extends Component {
   };
 
   toggleModalBasket = () => {
+    if (!this.state.pageItem) {
+      return;
+    }
     this.setState({ modalBag: !this.state.modalBag });
   };
 
@@ -37,9 +40,12 @@ class App extends Component {
     this.setState({ itemsBag: arrItem.length });
   };
 
+  changePage = () => {
+    this.setState({ pageItem: !this.state.pageItem });
+  };
+
   render() {
-    const { symbol, modalBag, itemsBag } = this.state;
-    console.log(symbol);
+    const { symbol, modalBag, itemsBag, pageItem } = this.state;
     return (
       <div className="App">
         <Header
@@ -52,6 +58,8 @@ class App extends Component {
           modalBag={modalBag}
           toggle={this.toggleModalBasket}
           countBag={(i) => this.addCounterBag(i)}
+          changePage={this.changePage}
+          pageItem={pageItem}
         />
       </div>
     );

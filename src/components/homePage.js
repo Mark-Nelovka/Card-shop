@@ -8,7 +8,6 @@ const fetchProduct = new Api();
 
 export default class HomePage extends Component {
   state = {
-    showBasker: false,
     productAll: [],
     id: "",
     priceHomePage: [],
@@ -105,14 +104,23 @@ export default class HomePage extends Component {
   getId = (e) => {
     const { id } = e.currentTarget;
     const { btn } = e.target.dataset;
+    const { stock } = e.currentTarget.dataset;
 
     switch (e._reactName) {
       case "onMouseOver":
         if (id !== this.state.id) {
           this.setState({ id: id });
         }
+
+        break;
+      case "onMouseLeave":
+        this.setState({ id: "" });
+
         break;
       case "onClick":
+        if (stock === "false") {
+          return;
+        }
         if (btn === undefined) {
           this.setState({ currentItem: id });
         }
@@ -193,6 +201,7 @@ export default class HomePage extends Component {
         saveAtrribute: [],
       });
     }
+    this.props.changePage();
     this.setState({
       cartPage: !this.state.cartPage,
     });
@@ -214,12 +223,11 @@ export default class HomePage extends Component {
       currentCategory,
       bag,
     } = this.state;
-    const { symbolCard, modalBag, toggle } = this.props;
+    const { symbolCard, modalBag, toggle, pageItem } = this.props;
     return (
       <main>
         {!currentItem && !cartPage && (
           <>
-            <div className={modalBag && bag.length > 0 ? "backdrop" : ""}></div>
             <div className="container">
               {category.length > 0 &&
                 category.map((categoryName) => {
@@ -246,7 +254,9 @@ export default class HomePage extends Component {
                           <li
                             onClick={this.getId}
                             onMouseOver={this.getId}
+                            onMouseLeave={this.getId}
                             id={id}
+                            data-stock={inStock}
                             className={
                               inStock
                                 ? "gallery_item"
@@ -322,6 +332,7 @@ export default class HomePage extends Component {
             </div>
           </>
         )}
+
         {modalBag && bag.length > 0 && (
           <ModalBag
             symbol={symbolCard}
@@ -332,6 +343,8 @@ export default class HomePage extends Component {
             getId={this.getId}
             decrementBag={this.decrementBag}
             saveAtrribute={this.saveAtrribute}
+            saveAtrributeArr={this.state.saveAtrribute}
+            pageItem={pageItem}
           />
         )}
         {cartPage && (
@@ -345,6 +358,7 @@ export default class HomePage extends Component {
             decrementBag={this.decrementBag}
             saveAtrribute={this.saveAtrribute}
             saveAtrributeArr={this.state.saveAtrribute}
+            pageItem={pageItem}
           />
         )}
         {currentItem && (
