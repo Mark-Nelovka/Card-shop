@@ -159,21 +159,31 @@ export default class ModalBag extends Component {
   };
 
   selectActive = (e) => {
-    const { unique } = e.target.dataset;
-    if (this.state.arrAtrributes.includes(unique)) {
-      const findUniqueKey = this.state.arrAtrributes.findIndex(
-        (v) => v === unique
-      );
-      this.state.arrAtrributes.splice(findUniqueKey, 1);
-      const state = this.state.arrAtrributes;
-      this.props.saveAtrribute(unique);
-      this.setState({ arrAtrributes: state });
-      return;
-    }
-    this.props.saveAtrribute(unique);
-    this.setState((prevState) => ({
-      arrAtrributes: [...prevState.arrAtrributes, unique],
-    }));
+    const { id } = e.target;
+    const { atr } = e.target.dataset;
+    const { value } = e.target.dataset;
+    const { itemsBag } = this.state;
+    const arrWithActiveAttributes = itemsBag.map((data) => {
+      for (let v of data.attributes) {
+        if (data.id === id) {
+          if (v.id === atr) {
+            for (let j of v.items) {
+              if (j.items.value === value) {
+                j.uniqueIdForButton = !j.uniqueIdForButton;
+              }
+              if (j.items.value !== value) j.uniqueIdForButton = false;
+            }
+          }
+        }
+      }
+      return data;
+    });
+    console.log(arrWithActiveAttributes);
+    localStorage.setItem(
+      "productItems",
+      JSON.stringify(arrWithActiveAttributes)
+    );
+    this.setState({ itemsBag: arrWithActiveAttributes });
   };
 
   openCart = (e) => {

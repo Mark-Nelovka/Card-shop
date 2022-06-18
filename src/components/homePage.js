@@ -17,7 +17,7 @@ export default class HomePage extends Component {
     currentItem: null,
     category: [],
     currentCategory: null,
-    saveAtrribute: [],
+    saveproductWithChangeAtr: [],
   };
 
   async componentDidMount() {
@@ -33,7 +33,16 @@ export default class HomePage extends Component {
     }
     const result = await fetchProduct.getAllProduct();
     const productsAll = result.map(
-      ({ gallery, id, name, prices, brand, inStock, category }) => {
+      ({
+        gallery,
+        id,
+        name,
+        prices,
+        brand,
+        inStock,
+        category,
+        description,
+      }) => {
         const obj = {
           product: gallery[0],
           id: id,
@@ -42,6 +51,7 @@ export default class HomePage extends Component {
           price: prices,
           inStock,
           category,
+          description,
         };
         return obj;
       }
@@ -132,22 +142,6 @@ export default class HomePage extends Component {
     }
   };
 
-  saveAtrribute = (unique) => {
-    if (this.state.saveAtrribute.includes(unique)) {
-      const findUniqueKey = this.state.saveAtrribute.findIndex(
-        (v) => v === unique
-      );
-      this.state.saveAtrribute.splice(findUniqueKey, 1);
-      const state = this.state.saveAtrribute;
-
-      this.setState({ saveAtrribute: state });
-      return;
-    }
-    this.setState((prevState) => ({
-      saveAtrribute: [...prevState.saveAtrribute, unique],
-    }));
-  };
-
   decrementBag = async (arr) => {
     localStorage.setItem("productItems", JSON.stringify(arr));
     this.setState({ bag: arr });
@@ -163,13 +157,13 @@ export default class HomePage extends Component {
     const { bag } = this.state;
     const productId = await fetchProduct.getProductId(id);
     const item = productId.map(
-      ({ name, brand, gallery, id, prices, attributes }) => {
+      ({ name, brand, gallery, id, prices, attributes, description }) => {
         const attributesWithChange = attributes.map((val) => {
           const itemsWithUniqueKey = [];
 
           for (let items of val.items) {
             itemsWithUniqueKey.push({
-              uniqueIdForButton: v4(),
+              uniqueIdForButton: false,
               items,
             });
           }
@@ -181,10 +175,11 @@ export default class HomePage extends Component {
         return {
           name,
           brand,
-          gallery: gallery[0],
+          gallery: gallery,
           id,
           attributes: attributesWithChange,
           prices,
+          description,
         };
       }
     );
@@ -195,12 +190,7 @@ export default class HomePage extends Component {
     this.props.countBag([...item, ...bag]);
   };
 
-  toggleCart = (textButton) => {
-    if (textButton !== "View bag") {
-      this.setState({
-        saveAtrribute: [],
-      });
-    }
+  toggleCart = () => {
     this.props.changePage();
     this.setState({
       cartPage: !this.state.cartPage,
@@ -210,6 +200,36 @@ export default class HomePage extends Component {
   changeCategory = (e) => {
     const { category } = e.target.dataset;
     this.setState({ currentCategory: category });
+  };
+
+  saveWithItemCard = (array, idProduct) => {
+    const { saveproductWithChangeAtr } = this.state;
+    this.setState((prevState) => ({
+      saveproductWithChangeAtr: [
+        ...prevState.saveproductWithChangeAtr,
+        ...array,
+      ],
+    }));
+    const notUniqueIndex = saveproductWithChangeAtr.findIndex(
+      (v) => v.id === idProduct
+    );
+    if (notUniqueIndex !== -1) {
+      saveproductWithChangeAtr.splice(notUniqueIndex, 1);
+    }
+    localStorage.setItem(
+      "productItems",
+      JSON.stringify([...array, ...this.state.bag])
+    );
+    this.setState((prevState) => ({
+      bag: [...array, ...prevState.bag],
+      currentItem: null,
+    }));
+    this.props.countBag([...array, ...this.state.bag]);
+
+    localStorage.setItem(
+      "productChangeAtr",
+      JSON.stringify([...array, ...saveproductWithChangeAtr])
+    );
   };
 
   render() {
@@ -342,8 +362,6 @@ export default class HomePage extends Component {
             countBag={this.addBag}
             getId={this.getId}
             decrementBag={this.decrementBag}
-            saveAtrribute={this.saveAtrribute}
-            saveAtrributeArr={this.state.saveAtrribute}
             pageItem={pageItem}
           />
         )}
@@ -356,8 +374,6 @@ export default class HomePage extends Component {
             countBag={this.addBag}
             getId={this.getId}
             decrementBag={this.decrementBag}
-            saveAtrribute={this.saveAtrribute}
-            saveAtrributeArr={this.state.saveAtrribute}
             pageItem={pageItem}
           />
         )}
@@ -367,6 +383,7 @@ export default class HomePage extends Component {
             itemId={currentItem}
             currentSymbol={activeSymbol}
             addBag={this.addBag}
+            saveWithItemCard={this.saveWithItemCard}
           />
         )}
       </main>

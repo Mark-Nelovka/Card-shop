@@ -6,13 +6,37 @@ const fetchProduct = new Api();
 export default class ItemPage extends Component {
   state = {
     item: null,
-    price: 0,
     currentImage: null,
     description: "",
-    arrAtrributes: [],
   };
 
   async componentDidMount() {
+    const getProductLocal = JSON.parse(localStorage.getItem("productItems"));
+    if (
+      getProductLocal &&
+      getProductLocal.find((v) => v.id === this.props.itemId)
+    ) {
+      let item = null;
+      for (let data of getProductLocal) {
+        if (data.id === this.props.itemId) {
+          const product = getProductLocal.find(
+            (v) => v.id === this.props.itemId
+          );
+          const str = data.description.replace(/<\/?[^>]+(>|$)/g, "");
+          item = {
+            current: data.gallery[0],
+            description: str,
+          };
+          this.setState({
+            item: [product],
+            currentImage: item.current,
+            description: item.description,
+          });
+        }
+      }
+
+      return;
+    }
     const fetchItem = await fetchProduct.getProductId(this.props.itemId);
     const itemId = fetchItem.map(
       ({ name, brand, gallery, id, prices, attributes, description }) => {
@@ -21,7 +45,7 @@ export default class ItemPage extends Component {
 
           for (let items of val.items) {
             itemsWithUniqueKey.push({
-              uniqueIdForButton: v4(),
+              uniqueIdForButton: false,
               items,
             });
           }
@@ -56,15 +80,6 @@ export default class ItemPage extends Component {
       currentImage: item.current,
       description: item.description,
     });
-
-    for (let data of itemId) {
-      data.prices.map(({ amount, currency }) => {
-        if (currency.symbol.trim() === this.props.currentSymbol.trim()) {
-          return this.setState({ price: amount });
-        }
-        return amount;
-      });
-    }
   }
 
   choiseItem = (e) => {
@@ -73,25 +88,38 @@ export default class ItemPage extends Component {
   };
 
   selectActive = (e) => {
-    const { unique } = e.target.dataset;
+    const { id } = e.target;
+    const { atr } = e.target.dataset;
+    const { value } = e.target.dataset;
+    const { item } = this.state;
+    const arrWithActiveAttributes = item.map((data) => {
+      for (let v of data.attributes) {
+        if (data.id === id) {
+          if (v.id === atr) {
+            for (let j of v.items) {
+              if (j.items.value === value) {
+                j.uniqueIdForButton = !j.uniqueIdForButton;
+              }
+              if (j.items.value !== value) j.uniqueIdForButton = false;
+            }
+          }
+        }
+      }
+      return data;
+    });
 
-    if (this.state.arrAtrributes.includes(unique)) {
-      const findUniqueKey = this.state.arrAtrributes.findIndex(
-        (v) => v === unique
-      );
-      this.state.arrAtrributes.splice(findUniqueKey, 1);
-      const state = this.state.arrAtrributes;
-      this.setState({ arrAtrributes: state });
-      return;
-    }
-    this.setState((prevState) => ({
-      arrAtrributes: [...prevState.arrAtrributes, unique],
-    }));
+    this.setState({ items: arrWithActiveAttributes });
+  };
+
+  pushToLocal = (e) => {
+    const { item } = this.state;
+    const { id } = e.target;
+    this.props.saveWithItemCard(item, id);
   };
 
   render() {
-    const { item, currentImage, description, arrAtrributes } = this.state;
-    const { currentSymbol, addBag, modalBag } = this.props;
+    const { item, currentImage, description } = this.state;
+    const { currentSymbol, modalBag } = this.props;
     return (
       <div className="container">
         <div className={modalBag ? "backdrop" : ""}></div>
@@ -133,7 +161,7 @@ export default class ItemPage extends Component {
                               return (
                                 <button
                                   className={
-                                    arrAtrributes.includes(uniqueIdForButton)
+                                    uniqueIdForButton
                                       ? "item_options-color--active"
                                       : "item_options-color"
                                   }
@@ -141,7 +169,9 @@ export default class ItemPage extends Component {
                                   onClick={this.selectActive}
                                 >
                                   <div
-                                    data-unique={uniqueIdForButton}
+                                    id={id}
+                                    data-atr={atr.id}
+                                    data-value={items.value}
                                     style={{
                                       backgroundColor: items.value,
                                       width: "32px",
@@ -154,13 +184,15 @@ export default class ItemPage extends Component {
                             return (
                               <button
                                 className={
-                                  arrAtrributes.includes(uniqueIdForButton)
+                                  uniqueIdForButton
                                     ? "item_change-options--active"
                                     : "item_change-options"
                                 }
                                 key={v4()}
                                 onClick={this.selectActive}
-                                data-unique={uniqueIdForButton}
+                                id={id}
+                                data-atr={atr.id}
+                                data-value={items.value}
                               >
                                 {items.value}
                               </button>
@@ -182,9 +214,12 @@ export default class ItemPage extends Component {
                       })}
                     </p>
                   </div>
-                  <button onClick={addBag} id={id} className="item_btn-add">
-                    ADD TO CART
-                  </button>
+                  <div onClick={this.pushToLocal}>
+                    <button id={id} className="item_btn-add">
+                      ADD TO CART
+                    </button>
+                  </div>
+
                   <p>{description}</p>
                 </div>
               );

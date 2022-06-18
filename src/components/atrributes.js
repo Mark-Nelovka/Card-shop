@@ -5,10 +5,10 @@ export default class Atrributes extends Component {
   render() {
     const {
       attributes,
-      saveAtrributeArr,
+      // saveAtrributeArr,
       selectActive,
       activePageCart,
-      arrAtrributes,
+      // arrAtrributes,
       id,
     } = this.props;
 
@@ -28,14 +28,18 @@ export default class Atrributes extends Component {
                         {activePageCart ? (
                           <button
                             className={
-                              saveAtrributeArr.includes(uniqueIdForButton)
-                                ? "cart_options-color--active"
+                              uniqueIdForButton
+                                ? // saveAtrributeArr.includes(uniqueIdForButton)
+                                  "cart_options-color--active"
                                 : "cart_options-color"
                             }
                             onClick={selectActive}
                           >
                             <div
-                              data-unique={uniqueIdForButton}
+                              data-atr={atr.id}
+                              data-value={items.value}
+                              id={id}
+                              // data-unique={uniqueIdForButton}
                               style={{
                                 backgroundColor: items.value,
                                 width: "32px",
@@ -46,14 +50,17 @@ export default class Atrributes extends Component {
                         ) : (
                           <button
                             className={
-                              arrAtrributes.includes(uniqueIdForButton)
-                                ? "options_color--active"
+                              uniqueIdForButton
+                                ? // arrAtrributes.includes(uniqueIdForButton)
+                                  "options_color--active"
                                 : "options_color"
                             }
                             onClick={selectActive}
                           >
                             <div
-                              data-unique={uniqueIdForButton}
+                              data-atr={atr.id}
+                              data-value={items.value}
+                              // data-unique={uniqueIdForButton}
                               id={id}
                               style={{
                                 backgroundColor: items.value,
@@ -71,25 +78,33 @@ export default class Atrributes extends Component {
                       {activePageCart ? (
                         <button
                           className={
-                            saveAtrributeArr.includes(uniqueIdForButton)
-                              ? "cart_change-options--active"
+                            uniqueIdForButton
+                              ? // saveAtrributeArr.includes(uniqueIdForButton)
+                                "cart_change-options--active"
                               : "cart_change-options"
                           }
                           onClick={selectActive}
-                          data-unique={uniqueIdForButton}
+                          // data-unique={uniqueIdForButton}
+                          data-atr={atr.id}
+                          data-value={items.value}
+                          id={id}
                         >
                           {items.value}
                         </button>
                       ) : (
                         <button
                           className={
-                            arrAtrributes.includes(uniqueIdForButton)
-                              ? "bag_change-options--active"
+                            uniqueIdForButton
+                              ? // arrAtrributes.includes(uniqueIdForButton)
+                                "bag_change-options--active"
                               : "bag_change-options"
                           }
                           key={v4()}
                           onClick={selectActive}
-                          data-unique={uniqueIdForButton}
+                          // data-unique={uniqueIdForButton}
+                          data-atr={atr.id}
+                          data-value={items.value}
+                          id={id}
                         >
                           {items.value}
                         </button>

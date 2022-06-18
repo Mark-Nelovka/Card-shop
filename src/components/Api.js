@@ -16,6 +16,7 @@ export default class Api extends Component {
                 gallery
                 brand
                 inStock
+                description
 
                 name
                 prices {
