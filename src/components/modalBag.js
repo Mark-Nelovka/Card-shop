@@ -37,7 +37,6 @@ export default class ModalBag extends Component {
     window.addEventListener("keydown", this.toggleBackdrop);
     window.addEventListener("click", this.toggleBackdrop);
     const { symbol } = this.state;
-
     const itemStorage = JSON.parse(localStorage.getItem("productItems"));
     if (itemStorage) {
       for (let data of itemStorage) {
@@ -102,10 +101,18 @@ export default class ModalBag extends Component {
       case "decrement":
         const uniqueId = [];
         const uniqueProduct = [];
+        const qwe = [];
+        const asd = [];
         const arrBagCounter = JSON.parse(localStorage.getItem("productItems"));
-        const bagLocalIndex = arrBagCounter.findIndex((v) => v.id === id);
-        arrBagCounter.splice(bagLocalIndex, 1);
-        const counterRepete = arrBagCounter.reduce((acc, val) => {
+        for (let i = arrBagCounter.length - 1; i >= 0; i -= 1) {
+          qwe.push(arrBagCounter[i]);
+        }
+        const bagLocalIndex = qwe.findIndex((v) => v.id === id);
+        qwe.splice(bagLocalIndex, 1);
+        for (let i = qwe.length - 1; i >= 0; i -= 1) {
+          asd.push(qwe[i]);
+        }
+        const counterRepete = asd.reduce((acc, val) => {
           if (id === val.id) {
             acc += 1;
           }
@@ -116,7 +123,7 @@ export default class ModalBag extends Component {
           Notiflix.Notify.success("Item has been removed from cart", {
             timeout: 1500,
           });
-          for (let data of arrBagCounter) {
+          for (let data of asd) {
             if (!uniqueId.includes(data.id)) {
               uniqueId.push(data.id);
               uniqueProduct.push(data);
@@ -124,15 +131,15 @@ export default class ModalBag extends Component {
           }
           this.setState({ itemsBag: uniqueProduct });
         }
-        if (arrBagCounter.length < 1) {
+        if (asd.length < 1) {
           if (this.props.cart) {
             this.props.toggleCart();
           } else {
             this.props.toggle();
           }
         }
-        localStorage.setItem("productItems", JSON.stringify(arrBagCounter));
-        this.props.decrementBag(arrBagCounter);
+        localStorage.setItem("productItems", JSON.stringify(asd));
+        this.props.decrementBag(asd);
         itemsBag.map((data) => {
           if (data.id === id) {
             data.prices.map(({ amount, currency }) => {
@@ -146,10 +153,11 @@ export default class ModalBag extends Component {
           }
           return total;
         });
+        console.log(arrBagCounter);
         this.setState((prevState) => ({
           sale: (prevState.total / 100) * 21,
           quantity: prevState.quantity - 1,
-          bagCounter: arrBagCounter,
+          bagCounter: asd,
         }));
         break;
 
@@ -178,12 +186,38 @@ export default class ModalBag extends Component {
       }
       return data;
     });
-    console.log(arrWithActiveAttributes);
-    localStorage.setItem(
-      "productItems",
-      JSON.stringify(arrWithActiveAttributes)
-    );
+
     this.setState({ itemsBag: arrWithActiveAttributes });
+    const qwe = JSON.parse(localStorage.getItem("productItems"));
+    if (qwe) {
+      if (qwe.find((q) => q.id === id)) {
+        const arrWithActiveAttributes = qwe.map((data) => {
+          for (let a of itemsBag) {
+            for (let o of a.attributes) {
+              for (let v of data.attributes) {
+                if (data.id === a.id) {
+                  if (v.id === o.id) {
+                    for (let j of v.items) {
+                      for (let c of o.items) {
+                        if (j.items.value === c.items.value) {
+                          j.uniqueIdForButton = c.uniqueIdForButton;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          return data;
+        });
+        localStorage.setItem(
+          "productItems",
+          JSON.stringify(arrWithActiveAttributes)
+        );
+      }
+    }
   };
 
   openCart = (e) => {

@@ -148,6 +148,49 @@ export default class HomePage extends Component {
     this.props.countBag(arr);
   };
 
+  incrementCountBag = async () => {
+    const { id } = this.state;
+    const { bag } = this.state;
+    const productId = await fetchProduct.getProductId(id);
+    const item = productId.map(
+      ({ name, brand, gallery, id, prices, attributes, description }) => {
+        const attributesWithChange = attributes.map((val) => {
+          const itemsWithUniqueKey = [];
+
+          for (let items of val.items) {
+            itemsWithUniqueKey.push({
+              uniqueIdForButton: false,
+              items,
+            });
+          }
+          return {
+            id: val.id,
+            items: itemsWithUniqueKey,
+          };
+        });
+        return {
+          name,
+          brand,
+          gallery: gallery,
+          id,
+          attributes: attributesWithChange,
+          prices,
+          description,
+        };
+      }
+    );
+    const localArr = JSON.parse(localStorage.getItem("productItems"));
+
+    localStorage.setItem(
+      "productItems",
+      JSON.stringify([...localArr, ...item])
+    );
+    this.setState((prevState) => ({
+      bag: [...prevState.bag, ...item],
+    }));
+    this.props.countBag([...item, ...bag]);
+  };
+
   addBag = async (e) => {
     const { id } = this.state;
     const { btn } = e.target.dataset;
@@ -183,7 +226,9 @@ export default class HomePage extends Component {
         };
       }
     );
-    localStorage.setItem("productItems", JSON.stringify([...item, ...bag]));
+
+    localStorage.setItem("productItems", JSON.stringify([...bag, ...item]));
+
     this.setState((prevState) => ({
       bag: [...prevState.bag, ...item],
     }));
@@ -203,33 +248,59 @@ export default class HomePage extends Component {
   };
 
   saveWithItemCard = (array, idProduct) => {
-    const { saveproductWithChangeAtr } = this.state;
-    this.setState((prevState) => ({
-      saveproductWithChangeAtr: [
-        ...prevState.saveproductWithChangeAtr,
-        ...array,
-      ],
-    }));
-    const notUniqueIndex = saveproductWithChangeAtr.findIndex(
-      (v) => v.id === idProduct
-    );
-    if (notUniqueIndex !== -1) {
-      saveproductWithChangeAtr.splice(notUniqueIndex, 1);
+    const localArr = JSON.parse(localStorage.getItem("productItems"));
+    if (localArr) {
+      if (localArr.find((q) => q.id === idProduct)) {
+        const arrWithActiveAttributes = localArr.map((data) => {
+          for (let a of array) {
+            for (let o of a.attributes) {
+              for (let v of data.attributes) {
+                if (data.id === a.id) {
+                  if (v.id === o.id) {
+                    for (let j of v.items) {
+                      for (let c of o.items) {
+                        if (j.items.value === c.items.value) {
+                          j.uniqueIdForButton = c.uniqueIdForButton;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          return data;
+        });
+        this.props.countBag([...array, ...this.state.bag]);
+        this.setState((prevState) => ({
+          bag: [...array, ...prevState.bag], // *? Пока не знаю надо ли
+          currentItem: null,
+        }));
+        localStorage.setItem(
+          "productItems",
+          JSON.stringify([...arrWithActiveAttributes, ...array])
+        );
+        return;
+      }
+      this.props.countBag([...array, ...this.state.bag]);
+      this.setState((prevState) => ({
+        bag: [...array, ...prevState.bag],
+        currentItem: null,
+      }));
+      localStorage.setItem(
+        "productItems",
+        JSON.stringify([...array, ...localArr])
+      );
+
+      return;
     }
-    localStorage.setItem(
-      "productItems",
-      JSON.stringify([...array, ...this.state.bag])
-    );
+    this.props.countBag([...array, ...this.state.bag]);
     this.setState((prevState) => ({
       bag: [...array, ...prevState.bag],
       currentItem: null,
     }));
-    this.props.countBag([...array, ...this.state.bag]);
-
-    localStorage.setItem(
-      "productChangeAtr",
-      JSON.stringify([...array, ...saveproductWithChangeAtr])
-    );
+    localStorage.setItem("productItems", JSON.stringify(array));
   };
 
   render() {
@@ -359,7 +430,7 @@ export default class HomePage extends Component {
             toggle={toggle}
             toggleCart={this.toggleCart}
             cart={cartPage}
-            countBag={this.addBag}
+            countBag={this.incrementCountBag}
             getId={this.getId}
             decrementBag={this.decrementBag}
             pageItem={pageItem}
@@ -371,7 +442,7 @@ export default class HomePage extends Component {
             toggle={toggle}
             toggleCart={this.toggleCart}
             cart={cartPage}
-            countBag={this.addBag}
+            countBag={this.incrementCountBag}
             getId={this.getId}
             decrementBag={this.decrementBag}
             pageItem={pageItem}

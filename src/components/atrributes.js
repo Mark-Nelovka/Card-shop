@@ -3,14 +3,7 @@ import { v4 } from "uuid";
 
 export default class Atrributes extends Component {
   render() {
-    const {
-      attributes,
-      // saveAtrributeArr,
-      selectActive,
-      activePageCart,
-      // arrAtrributes,
-      id,
-    } = this.props;
+    const { attributes, selectActive, activePageCart, id } = this.props;
 
     return (
       <>
@@ -29,8 +22,7 @@ export default class Atrributes extends Component {
                           <button
                             className={
                               uniqueIdForButton
-                                ? // saveAtrributeArr.includes(uniqueIdForButton)
-                                  "cart_options-color--active"
+                                ? "cart_options-color--active"
                                 : "cart_options-color"
                             }
                             onClick={selectActive}
@@ -39,7 +31,6 @@ export default class Atrributes extends Component {
                               data-atr={atr.id}
                               data-value={items.value}
                               id={id}
-                              // data-unique={uniqueIdForButton}
                               style={{
                                 backgroundColor: items.value,
                                 width: "32px",
@@ -51,8 +42,7 @@ export default class Atrributes extends Component {
                           <button
                             className={
                               uniqueIdForButton
-                                ? // arrAtrributes.includes(uniqueIdForButton)
-                                  "options_color--active"
+                                ? "options_color--active"
                                 : "options_color"
                             }
                             onClick={selectActive}
@@ -60,7 +50,6 @@ export default class Atrributes extends Component {
                             <div
                               data-atr={atr.id}
                               data-value={items.value}
-                              // data-unique={uniqueIdForButton}
                               id={id}
                               style={{
                                 backgroundColor: items.value,
@@ -79,12 +68,10 @@ export default class Atrributes extends Component {
                         <button
                           className={
                             uniqueIdForButton
-                              ? // saveAtrributeArr.includes(uniqueIdForButton)
-                                "cart_change-options--active"
+                              ? "cart_change-options--active"
                               : "cart_change-options"
                           }
                           onClick={selectActive}
-                          // data-unique={uniqueIdForButton}
                           data-atr={atr.id}
                           data-value={items.value}
                           id={id}
@@ -95,13 +82,11 @@ export default class Atrributes extends Component {
                         <button
                           className={
                             uniqueIdForButton
-                              ? // arrAtrributes.includes(uniqueIdForButton)
-                                "bag_change-options--active"
+                              ? "bag_change-options--active"
                               : "bag_change-options"
                           }
                           key={v4()}
                           onClick={selectActive}
-                          // data-unique={uniqueIdForButton}
                           data-atr={atr.id}
                           data-value={items.value}
                           id={id}

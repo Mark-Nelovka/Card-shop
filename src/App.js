@@ -41,7 +41,7 @@ class App extends Component {
   };
 
   changePage = () => {
-    this.setState({ pageItem: !this.state.pageItem });
+    this.setState({ pageItem: !this.state.pageItem }); // *? разобраться зачем нужна эта функция. При комментировании не открывается модалка
   };
 
   render() {
