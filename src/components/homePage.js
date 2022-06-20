@@ -17,7 +17,6 @@ export default class HomePage extends Component {
     currentItem: null,
     category: [],
     currentCategory: null,
-    saveproductWithChangeAtr: [],
   };
 
   async componentDidMount() {
@@ -274,7 +273,7 @@ export default class HomePage extends Component {
         });
         this.props.countBag([...array, ...this.state.bag]);
         this.setState((prevState) => ({
-          bag: [...array, ...prevState.bag], // *? Пока не знаю надо ли
+          bag: [...array, ...prevState.bag],
           currentItem: null,
         }));
         localStorage.setItem(

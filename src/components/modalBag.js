@@ -12,7 +12,6 @@ export default class ModalBag extends Component {
     itemsBag: null,
     symbol: this.props.symbol,
     total: 0,
-    arrAtrributes: [],
     activePageCart: this.props.cart,
     quantity: 0,
     sale: 0,
@@ -101,18 +100,18 @@ export default class ModalBag extends Component {
       case "decrement":
         const uniqueId = [];
         const uniqueProduct = [];
-        const qwe = [];
-        const asd = [];
+        const reverseProduct = [];
+        const backReverse = [];
         const arrBagCounter = JSON.parse(localStorage.getItem("productItems"));
         for (let i = arrBagCounter.length - 1; i >= 0; i -= 1) {
-          qwe.push(arrBagCounter[i]);
+          reverseProduct.push(arrBagCounter[i]);
         }
-        const bagLocalIndex = qwe.findIndex((v) => v.id === id);
-        qwe.splice(bagLocalIndex, 1);
-        for (let i = qwe.length - 1; i >= 0; i -= 1) {
-          asd.push(qwe[i]);
+        const bagLocalIndex = reverseProduct.findIndex((v) => v.id === id);
+        reverseProduct.splice(bagLocalIndex, 1);
+        for (let i = reverseProduct.length - 1; i >= 0; i -= 1) {
+          backReverse.push(reverseProduct[i]);
         }
-        const counterRepete = asd.reduce((acc, val) => {
+        const counterRepete = backReverse.reduce((acc, val) => {
           if (id === val.id) {
             acc += 1;
           }
@@ -123,7 +122,7 @@ export default class ModalBag extends Component {
           Notiflix.Notify.success("Item has been removed from cart", {
             timeout: 1500,
           });
-          for (let data of asd) {
+          for (let data of backReverse) {
             if (!uniqueId.includes(data.id)) {
               uniqueId.push(data.id);
               uniqueProduct.push(data);
@@ -131,15 +130,15 @@ export default class ModalBag extends Component {
           }
           this.setState({ itemsBag: uniqueProduct });
         }
-        if (asd.length < 1) {
+        if (backReverse.length < 1) {
           if (this.props.cart) {
             this.props.toggleCart();
           } else {
             this.props.toggle();
           }
         }
-        localStorage.setItem("productItems", JSON.stringify(asd));
-        this.props.decrementBag(asd);
+        localStorage.setItem("productItems", JSON.stringify(backReverse));
+        this.props.decrementBag(backReverse);
         itemsBag.map((data) => {
           if (data.id === id) {
             data.prices.map(({ amount, currency }) => {
@@ -153,11 +152,10 @@ export default class ModalBag extends Component {
           }
           return total;
         });
-        console.log(arrBagCounter);
         this.setState((prevState) => ({
           sale: (prevState.total / 100) * 21,
           quantity: prevState.quantity - 1,
-          bagCounter: asd,
+          bagCounter: backReverse,
         }));
         break;
 
@@ -188,10 +186,10 @@ export default class ModalBag extends Component {
     });
 
     this.setState({ itemsBag: arrWithActiveAttributes });
-    const qwe = JSON.parse(localStorage.getItem("productItems"));
-    if (qwe) {
-      if (qwe.find((q) => q.id === id)) {
-        const arrWithActiveAttributes = qwe.map((data) => {
+    const atrLocal = JSON.parse(localStorage.getItem("productItems"));
+    if (atrLocal) {
+      if (atrLocal.find((q) => q.id === id)) {
+        const arrWithActiveAttributes = atrLocal.map((data) => {
           for (let a of itemsBag) {
             for (let o of a.attributes) {
               for (let v of data.attributes) {
@@ -227,15 +225,8 @@ export default class ModalBag extends Component {
   };
 
   render() {
-    const {
-      itemsBag,
-      total,
-      arrAtrributes,
-      activePageCart,
-      quantity,
-      sale,
-      bagCounter,
-    } = this.state;
+    const { itemsBag, total, activePageCart, quantity, sale, bagCounter } =
+      this.state;
     const { toggleCart, getId, symbol, saveAtrributeArr } = this.props;
     return (
       <>
@@ -290,7 +281,6 @@ export default class ModalBag extends Component {
                               saveAtrributeArr={saveAtrributeArr}
                               selectActive={this.selectActive}
                               activePageCart={activePageCart}
-                              arrAtrributes={arrAtrributes}
                               id={id}
                             />
                           }
