@@ -252,55 +252,60 @@ export default class HomePage extends Component {
 
   saveWithItemCard = (array, idProduct) => {
     const localArr = JSON.parse(localStorage.getItem("productItems"));
-    if (localArr) {
-      if (localArr.find((q) => q.id === idProduct)) {
-        const arrWithActiveAttributes = localArr.map((data) => {
-          for (let a of array) {
-            for (let o of a.attributes) {
-              for (let v of data.attributes) {
-                if (data.id === a.id) {
-                  if (v.id === o.id) {
-                    for (let j of v.items) {
-                      for (let c of o.items) {
-                        if (j.items.value === c.items.value) {
-                          j.uniqueIdForButton = c.uniqueIdForButton;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+    // if (localArr) {
+    //   if (localArr.find((q) => q.id === idProduct)) {
+    // const arrWithActiveAttributes = localArr.map((data) => {
+    //   for (let a of array) {
+    //     for (let o of a.attributes) {
+    //       for (let v of data.attributes) {
+    //         if (data.id === a.id) {
+    //           if (v.id === o.id) {
+    //             for (let j of v.items) {
+    //               for (let c of o.items) {
+    //                 if (j.items.value === c.items.value) {
+    //                   j.uniqueIdForButton = c.uniqueIdForButton;
+    //                 }
+    //               }
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
 
-          return data;
-        });
-        this.props.countBag([...array, ...this.state.bag]);
-        this.setState((prevState) => ({
-          bag: [...array, ...prevState.bag],
-        }));
-        localStorage.setItem(
-          "productItems",
-          JSON.stringify([...arrWithActiveAttributes, ...array])
-        );
-        return;
-      }
-      this.props.countBag([...array, ...this.state.bag]);
-      this.setState((prevState) => ({
-        bag: [...array, ...prevState.bag],
-      }));
-      localStorage.setItem(
-        "productItems",
-        JSON.stringify([...array, ...localArr])
-      );
+    //   return data;
+    // });
+    // this.props.countBag([...array, ...this.state.bag]);
+    // this.setState((prevState) => ({
+    //   bag: [...array, ...prevState.bag],
+    // }));
+    // localStorage.setItem(
+    //   "productItems",
+    //   JSON.stringify([...arrWithActiveAttributes, ...array])
+    // );
+    // console.log(arrWithActiveAttributes);
+    //   return;
+    // }
+    //   this.props.countBag([...array, ...this.state.bag]);
+    //   this.setState((prevState) => ({
+    //     bag: [...array, ...prevState.bag],
+    //   }));
+    //   localStorage.setItem(
+    //     "productItems",
+    //     JSON.stringify([...array, ...localArr])
+    //   );
 
-      return;
-    }
+    //   return;
+    // }
+    // console.log(array);
     this.props.countBag([...array, ...this.state.bag]);
     this.setState((prevState) => ({
       bag: [...array, ...prevState.bag],
     }));
-    localStorage.setItem("productItems", JSON.stringify(array));
+    localStorage.setItem(
+      "productItems",
+      JSON.stringify([...array, ...this.state.bag])
+    );
   };
 
   render() {
@@ -313,6 +318,7 @@ export default class HomePage extends Component {
       category,
       currentCategory,
       bag,
+      id,
     } = this.state;
     const { symbolCard, modalBag, toggle, pageItem } = this.props;
     return (
@@ -455,6 +461,7 @@ export default class HomePage extends Component {
             currentSymbol={activeSymbol}
             addBag={this.addBag}
             saveWithItemCard={this.saveWithItemCard}
+            id={id}
           />
         )}
       </main>

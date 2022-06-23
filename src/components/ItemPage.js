@@ -71,7 +71,7 @@ export default class ItemPage extends Component {
       const str = data.description.replace(/<\/?[^>]+(>|$)/g, "");
       item = {
         current: data.gallery[0],
-        description: str,
+        description: str, // * Использую в рендере. Уже можно удалить!
       };
     }
 
@@ -107,6 +107,9 @@ export default class ItemPage extends Component {
       }
       return data;
     });
+    // this.setState((prevState) => ({
+    //   item: [...prevState.item, ...arrWithActiveAttributes],
+    // }));
     this.setState({
       items: arrWithActiveAttributes,
     });
@@ -142,7 +145,8 @@ export default class ItemPage extends Component {
 
   render() {
     const { item, currentImage } = this.state;
-    const { currentSymbol, modalBag } = this.props;
+    const { currentSymbol, modalBag, id } = this.props;
+    // console.log(item.filter((v) => v.id === id));
     return (
       <div className="container">
         <div className={modalBag ? "backdrop" : ""}></div>
@@ -150,15 +154,18 @@ export default class ItemPage extends Component {
           <div className="container_photo">
             <ul className="item_list">
               {item &&
-                item.map(({ gallery }) => {
-                  return gallery.map((src) => {
-                    return (
-                      <li key={v4()} data-src={src} onClick={this.choiseItem}>
-                        <img height="80" src={src} alt="Item" />
-                      </li>
-                    );
-                  });
-                })}
+                item
+                  .reverse()
+                  .filter((v) => v.id === id)
+                  .map(({ gallery }) => {
+                    return gallery.map((src) => {
+                      return (
+                        <li key={v4()} data-src={src} onClick={this.choiseItem}>
+                          <img height="80" src={src} alt="Item" />
+                        </li>
+                      );
+                    });
+                  })}
             </ul>
             {currentImage && (
               <div className="item_image">
@@ -197,8 +204,6 @@ export default class ItemPage extends Component {
                                     data-value={items.value}
                                     style={{
                                       backgroundColor: items.value,
-                                      width: "32px",
-                                      height: "32px",
                                     }}
                                   ></div>
                                 </button>

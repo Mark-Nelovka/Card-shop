@@ -91,6 +91,10 @@
   &:not(:last-child) {
     margin-right: 8px;
   }
+  & > div {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .options_color {
@@ -102,6 +106,10 @@
   background-color: inherit;
   &:not(:last-child) {
     margin-right: 8px;
+  }
+  & > div {
+    width: 16px;
+    height: 16px;
   }
 }
 

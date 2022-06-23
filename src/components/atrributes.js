@@ -33,8 +33,6 @@ export default class Atrributes extends Component {
                               id={id}
                               style={{
                                 backgroundColor: items.value,
-                                width: "32px",
-                                height: "32px",
                               }}
                             ></div>
                           </button>

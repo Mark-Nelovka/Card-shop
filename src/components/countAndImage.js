@@ -1,6 +1,7 @@
 import { Component } from "react";
 
 export default class Count extends Component {
+  counter = () => {};
   render() {
     const { id, activePageCart, changeAmount, bagCounter, gallery } =
       this.props;

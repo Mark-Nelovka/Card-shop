@@ -31,18 +31,41 @@ export default class ModalBag extends Component {
   }
 
   componentDidMount() {
-    const arr = [];
+    let arr = [];
     window.addEventListener("keydown", this.toggleBackdrop);
     window.addEventListener("click", this.toggleBackdrop);
     const { symbol } = this.state;
     const itemStorage = JSON.parse(localStorage.getItem("productItems"));
+    // for (let data of itemStorage) {
+    //   const uniqueArrForModal = arr.find((v) => v.id === data.id);
+    //   if (!uniqueArrForModal) {
+    //     arr.push(data);
+    //   }
+    // }
     if (itemStorage) {
-      for (let data of itemStorage) {
-        const uniqueArrForModal = arr.find((v) => v.id === data.id);
-        if (!uniqueArrForModal) {
-          arr.push(data);
-        }
-      }
+      // for (let data of itemStorage) {
+      //   for (let atrLocal of data.attributes) {
+      //     for (let itemsLocal of atrLocal.items) {
+      //       if()
+      //     }
+      //   }
+      // }
+      // for (let dataLocal of itemStorage) {
+      //   for (let dataArr of arr) {
+      //     for (let atrLocal of dataLocal.attributes) {
+      //       for (let atrArr of dataArr.attributes) {
+      //         if (atrLocal.id === atrArr.id) {
+      //           for (let itemsLocal of atrLocal.items) {
+      //             for (let itemsAtr of atrArr.items) {
+      //               if(atrLocal.id)
+      //             }
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
+
       const prices = itemStorage.flatMap((data) => {
         return data.prices;
       });
@@ -57,7 +80,7 @@ export default class ModalBag extends Component {
       const sale = (price / 100) * 21;
 
       this.setState({
-        itemsBag: arr,
+        itemsBag: itemStorage,
         total: price,
         quantity: itemStorage.length,
         sale: sale,
@@ -155,59 +178,59 @@ export default class ModalBag extends Component {
     }
   };
 
-  selectActive = (e) => {
-    const { id } = e.target;
-    const { atr } = e.target.dataset;
-    const { value } = e.target.dataset;
-    const { itemsBag } = this.state;
-    const arrWithActiveAttributes = itemsBag.map((data) => {
-      for (let v of data.attributes) {
-        if (data.id === id) {
-          if (v.id === atr) {
-            for (let j of v.items) {
-              if (j.items.value === value) {
-                j.uniqueIdForButton = !j.uniqueIdForButton;
-              }
-              if (j.items.value !== value) j.uniqueIdForButton = false;
-            }
-          }
-        }
-      }
-      return data;
-    });
+  // selectActive = (e) => {
+  //   const { id } = e.target;
+  //   const { atr } = e.target.dataset;
+  //   const { value } = e.target.dataset;
+  //   const { itemsBag } = this.state;
+  //   const arrWithActiveAttributes = itemsBag.map((data) => {
+  //     for (let v of data.attributes) {
+  //       if (data.id === id) {
+  //         if (v.id === atr) {
+  //           for (let j of v.items) {
+  //             if (j.items.value === value) {
+  //               j.uniqueIdForButton = !j.uniqueIdForButton;
+  //             }
+  //             if (j.items.value !== value) j.uniqueIdForButton = false;
+  //           }
+  //         }
+  //       }
+  //     }
+  //     return data;
+  //   });
 
-    this.setState({ itemsBag: arrWithActiveAttributes });
-    const atrLocal = JSON.parse(localStorage.getItem("productItems"));
-    if (atrLocal) {
-      if (atrLocal.find((q) => q.id === id)) {
-        const arrWithActiveAttributes = atrLocal.map((data) => {
-          for (let a of itemsBag) {
-            for (let o of a.attributes) {
-              for (let v of data.attributes) {
-                if (data.id === a.id) {
-                  if (v.id === o.id) {
-                    for (let j of v.items) {
-                      for (let c of o.items) {
-                        if (j.items.value === c.items.value) {
-                          j.uniqueIdForButton = c.uniqueIdForButton;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+  //   this.setState({ itemsBag: arrWithActiveAttributes });
+  //   const atrLocal = JSON.parse(localStorage.getItem("productItems"));
+  //   if (atrLocal) {
+  //     if (atrLocal.find((q) => q.id === id)) {
+  //       const arrWithActiveAttributes = atrLocal.map((data) => {
+  //         for (let a of itemsBag) {
+  //           for (let o of a.attributes) {
+  //             for (let v of data.attributes) {
+  //               if (data.id === a.id) {
+  //                 if (v.id === o.id) {
+  //                   for (let j of v.items) {
+  //                     for (let c of o.items) {
+  //                       if (j.items.value === c.items.value) {
+  //                         j.uniqueIdForButton = c.uniqueIdForButton;
+  //                       }
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             }
+  //           }
+  //         }
 
-          return data;
-        });
-        localStorage.setItem(
-          "productItems",
-          JSON.stringify(arrWithActiveAttributes)
-        );
-      }
-    }
-  };
+  //         return data;
+  //       });
+  //       localStorage.setItem(
+  //         "productItems",
+  //         JSON.stringify(arrWithActiveAttributes)
+  //       );
+  //     }
+  //   }
+  // };
 
   openCart = (e) => {
     const { textContent } = e.target;

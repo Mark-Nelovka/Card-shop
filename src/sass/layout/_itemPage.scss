@@ -46,6 +46,10 @@
   &:not(:last-child) {
     margin-right: 8px;
   }
+  & > div {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .item_options-color--active {
@@ -56,6 +60,10 @@
   background-color: inherit;
   &:not(:last-child) {
     margin-right: 8px;
+  }
+  & > div {
+    width: 32px;
+    height: 32px;
   }
 }
 
