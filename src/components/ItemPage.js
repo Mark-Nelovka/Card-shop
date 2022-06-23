@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { v4 } from "uuid";
-import Api from "./Api";
+import Api from "../Api/Api";
 const fetchProduct = new Api();
 
 export default class ItemPage extends Component {
@@ -107,14 +107,29 @@ export default class ItemPage extends Component {
       }
       return data;
     });
-
-    this.setState({ items: arrWithActiveAttributes });
+    this.setState({
+      items: arrWithActiveAttributes,
+    });
   };
 
   pushToLocal = (e) => {
     const { item } = this.state;
     const { id } = e.target;
-    this.props.saveWithItemCard(item, id);
+    const arr = [];
+    item.map((data) => {
+      for (let v of data.attributes) {
+        for (let j of v.items) {
+          arr.push(j.uniqueIdForButton);
+        }
+      }
+      return data;
+    });
+    if (arr.some((v) => v === true)) {
+      this.props.saveWithItemCard(item, id);
+      this.setState({ attributes: null });
+      return;
+    }
+    return;
   };
 
   render() {
@@ -182,20 +197,22 @@ export default class ItemPage extends Component {
                               );
                             }
                             return (
-                              <button
-                                className={
-                                  uniqueIdForButton
-                                    ? "item_change-options--active"
-                                    : "item_change-options"
-                                }
-                                key={v4()}
-                                onClick={this.selectActive}
-                                id={id}
-                                data-atr={atr.id}
-                                data-value={items.value}
-                              >
-                                {items.value}
-                              </button>
+                              <>
+                                <button
+                                  className={
+                                    uniqueIdForButton
+                                      ? "item_change-options--active"
+                                      : "item_change-options"
+                                  }
+                                  key={v4()}
+                                  onClick={this.selectActive}
+                                  id={id}
+                                  data-atr={atr.id}
+                                  data-value={items.value}
+                                >
+                                  {items.value}
+                                </button>
+                              </>
                             );
                           })}
                         </div>

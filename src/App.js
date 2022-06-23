@@ -1,6 +1,8 @@
 import { Component } from "react";
 import Header from "./components/header";
-import HomePage from "./components/homePage";
+import Clothes from "./components/Clothes";
+import Tech from "./components/Tech";
+import { Routes, Route } from "react-router-dom";
 
 class App extends Component {
   state = {
@@ -12,7 +14,7 @@ class App extends Component {
 
   componentDidMount() {
     const symbol = localStorage.getItem("currencySymbol");
-
+    console.log("object");
     const counter = JSON.parse(localStorage.getItem("productItems"));
     if (counter) {
       this.setState({ itemsBag: counter.length });
@@ -46,22 +48,50 @@ class App extends Component {
 
   render() {
     const { symbol, modalBag, itemsBag, pageItem } = this.state;
+    const { history } = this.props;
     return (
-      <div className="App">
+      // <div className="App">
+      <>
         <Header
           changeSymbol={this.changeSymbol}
           modalBag={this.toggleModalBasket}
           counter={itemsBag}
         />
-        <HomePage
-          symbolCard={symbol}
-          modalBag={modalBag}
-          toggle={this.toggleModalBasket}
-          countBag={(i) => this.addCounterBag(i)}
-          changePage={this.changePage}
-          pageItem={pageItem}
-        />
-      </div>
+        {/* <Suspense fallback={<h1>Loading...</h1>}> */}
+        <Routes>
+          <Route
+            path="/Card-shop/clothes"
+            element={
+              <Clothes
+                symbolCard={symbol}
+                modalBag={modalBag}
+                toggle={this.toggleModalBasket}
+                countBag={(i) => this.addCounterBag(i)}
+                changePage={this.changePage}
+                pageItem={pageItem}
+                history={history}
+              />
+            }
+          />
+          <Route
+            history={history}
+            path="/Card-shop/tech"
+            element={
+              <Tech
+                symbolCard={symbol}
+                modalBag={modalBag}
+                toggle={this.toggleModalBasket}
+                countBag={(i) => this.addCounterBag(i)}
+                changePage={this.changePage}
+                pageItem={pageItem}
+                history={history}
+              />
+            }
+          />
+        </Routes>
+        {/* </Suspense> */}
+      </>
+      // </div>
     );
   }
 }

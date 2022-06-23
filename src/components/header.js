@@ -5,6 +5,9 @@ import ArrowUp from "../images/arrow-up.svg";
 import Basket from "../images/Empty-Cart.svg";
 import ArrowDown from "../images/arrow-down.svg";
 import ChoiceCurrencyModal from "./modalCurrency";
+// import { createBrowserHistory } from "history";
+
+// const history = createBrowserHistory();
 
 export default class Header extends Component {
   state = {
@@ -51,16 +54,22 @@ export default class Header extends Component {
                     className={({ isActive }) =>
                       `${isActive ? "active" : "nav_link"}`
                     }
-                    to="/Card-shop"
+                    onClick={this.togglePage}
+                    to="/Card-shop/clothes"
                   >
-                    Women
+                    Clothes
                   </NavLink>
                 </li>
                 <li>
-                  <button className="nav_link">Men</button>
-                </li>
-                <li>
-                  <button className="nav_link">Kids</button>
+                  <NavLink
+                    className={({ isActive }) =>
+                      `${isActive ? "active" : "nav_link"}`
+                    }
+                    to="/Card-shop/tech"
+                    onClick={this.togglePage}
+                  >
+                    Tech
+                  </NavLink>
                 </li>
               </ul>
             </nav>
@@ -68,24 +77,23 @@ export default class Header extends Component {
               <img src={Logo} alt="Logo" className="logo" />
             </div>
             <div className="basket_container">
-              <span>{activeCurrency}</span>
-
-              <button onClick={this.changeCurrency} className="btn_arrow">
+              <button onClick={this.changeCurrency} className="btn_currency">
+                <span>{activeCurrency}</span>
                 <img
                   className="arrow_down"
                   src={currencyModal ? ArrowUp : ArrowDown}
                   alt="Arrow up"
                 />
-                {currencyModal && (
-                  <ChoiceCurrencyModal
-                    relevantCurrency={this.relevantCurrency}
-                  />
-                )}
               </button>
 
               <button onClick={this.toggleModalBag} className="btn_basket ">
                 <img src={Basket} alt="Basket" />
                 {counter > 0 && <div className="bag">{counter}</div>}
+                {currencyModal && (
+                  <ChoiceCurrencyModal
+                    relevantCurrency={this.relevantCurrency}
+                  />
+                )}
               </button>
             </div>
           </div>

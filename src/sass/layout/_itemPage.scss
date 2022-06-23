@@ -103,3 +103,8 @@
   cursor: pointer;
   margin-bottom: 40px;
 }
+
+.notification {
+  position: absolute;
+  @include text("Raleway", normal, 400, 11px, 120%, red);
+}

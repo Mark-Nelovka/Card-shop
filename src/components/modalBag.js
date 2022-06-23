@@ -1,11 +1,10 @@
-import Notiflix from "notiflix";
 import React, { Component } from "react";
 import Prices from "./prices";
 import Atrributes from "./atrributes";
 import Count from "./countAndImage";
 import Total from "./total";
 import { v4 } from "uuid";
-import Api from "./Api";
+import Api from "../Api/Api";
 const fetchProduct = new Api();
 export default class ModalBag extends Component {
   state = {
@@ -114,9 +113,6 @@ export default class ModalBag extends Component {
         }, 0);
 
         if (counterRepete === 0) {
-          Notiflix.Notify.success("Item has been removed from cart", {
-            timeout: 1500,
-          });
           for (let data of arrBagCounter) {
             if (!uniqueId.includes(data.id)) {
               uniqueId.push(data.id);

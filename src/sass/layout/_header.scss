@@ -52,7 +52,7 @@
   height: 41px;
   padding-top: 25px;
   padding-bottom: 15px;
-  margin-left: 325px;
+  margin-left: 390px;
   margin-right: auto;
   cursor: pointer;
 }
@@ -63,7 +63,7 @@
   justify-content: center;
 }
 
-.btn_arrow {
+.btn_currency {
   padding: 0 0;
   border: none;
   height: 3px;
@@ -72,7 +72,10 @@
   margin-left: 5px;
   padding: 5px 5px;
   cursor: pointer;
-  position: relative;
+  // position: relative;
+  display: flex;
+  align-items: center;
+  margin-right: 22px;
 }
 
 .btn_basket {
@@ -86,7 +89,7 @@
 }
 
 .arrow_down {
-  margin-bottom: 50px;
+  margin-left: 10px;
 }
 
 .bag {

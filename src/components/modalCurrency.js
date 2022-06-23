@@ -1,5 +1,5 @@
 import { Component } from "react";
-import Api from "./Api";
+import Api from "../Api/Api";
 const fetchCur = new Api();
 
 export default class ChoiceCurrencyModal extends Component {
