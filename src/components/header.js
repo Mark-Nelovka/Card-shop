@@ -91,7 +91,9 @@ export default class Header extends Component {
                 {counter > 0 && <div className="bag">{counter}</div>}
                 {currencyModal && (
                   <ChoiceCurrencyModal
+                    changeCurrency={this.changeCurrency}
                     relevantCurrency={this.relevantCurrency}
+                    currencyModal={currencyModal}
                   />
                 )}
               </button>

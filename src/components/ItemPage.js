@@ -128,12 +128,16 @@ export default class ItemPage extends Component {
       this.props.saveWithItemCard(item, id);
       this.setState({ attributes: null });
       return;
+    } else if (arr.length === 0) {
+      this.props.saveWithItemCard(item, id);
+      this.setState({ attributes: null });
+      return;
     }
     return;
   };
 
   render() {
-    const { item, currentImage, description } = this.state;
+    const { item, currentImage } = this.state;
     const { currentSymbol, modalBag } = this.props;
     return (
       <div className="container">
@@ -159,7 +163,7 @@ export default class ItemPage extends Component {
             )}
           </div>
           {item &&
-            item.map(({ name, brand, id, attributes, prices }) => {
+            item.map(({ name, brand, id, attributes, prices, description }) => {
               return (
                 <div key={v4()}>
                   <div className="item_container-info">
@@ -237,7 +241,7 @@ export default class ItemPage extends Component {
                     </button>
                   </div>
 
-                  <p>{description}</p>
+                  {description}
                 </div>
               );
             })}

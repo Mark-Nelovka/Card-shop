@@ -116,7 +116,6 @@ export default class HomePage extends Component {
   getId = (e) => {
     const { id } = e.currentTarget;
     const { btn } = e.target.dataset;
-    const { stock } = e.currentTarget.dataset;
 
     switch (e._reactName) {
       case "onMouseOver":
@@ -130,9 +129,6 @@ export default class HomePage extends Component {
 
         break;
       case "onClick":
-        if (stock === "false") {
-          return;
-        }
         if (btn === undefined) {
           this.setState({ currentItem: id });
         }
