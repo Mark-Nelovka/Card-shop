@@ -104,7 +104,6 @@
   margin-bottom: 40px;
 }
 
-.notification {
-  position: absolute;
-  @include text("Raleway", normal, 400, 11px, 120%, red);
+.description_text {
+  @include text("Roboto", normal, 400, 16px, 159.96%, $basic-color);
 }

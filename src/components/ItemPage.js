@@ -136,6 +136,10 @@ export default class ItemPage extends Component {
     return;
   };
 
+  createMarkup = (text) => {
+    return { __html: `${text}` };
+  };
+
   render() {
     const { item, currentImage } = this.state;
     const { currentSymbol, modalBag } = this.props;
@@ -240,8 +244,10 @@ export default class ItemPage extends Component {
                       ADD TO CART
                     </button>
                   </div>
-
-                  {description}
+                  <div
+                    className="description_text"
+                    dangerouslySetInnerHTML={this.createMarkup(description)}
+                  />
                 </div>
               );
             })}
